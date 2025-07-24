@@ -1,0 +1,48 @@
+#!/bin/bash
+# Example local configuration for mac-setup
+# Copy this file to config.local.sh and uncomment/modify the settings you want to change
+
+# Python version (default: 3.13)
+# PYTHON_VERSION="3.12"
+
+# Node.js version (default: 22)
+# NODE_VERSION="20"
+
+# Skip GUI applications installation (useful for servers)
+# INSTALL_GUI_APPS=false
+
+# Skip fun stuff (cowsay, fortune, etc.)
+# INSTALL_FUN_STUFF=false
+
+# Don't install DevOps tools
+# INSTALL_DEVOPS_TOOLS=false
+
+# Use iTerm2 instead of Warp
+# PREFERRED_TERMINAL="iterm2"
+
+# Use Docker Desktop instead of OrbStack
+# CONTAINER_RUNTIME="docker-desktop"
+
+# Use Colima for containers (free alternative)
+# CONTAINER_RUNTIME="colima"
+
+# Install Oh My Zsh
+# INSTALL_OH_MY_ZSH=true
+
+# Don't install Rust
+# INSTALL_RUST=false
+
+# Install Java
+# INSTALL_JAVA=true
+
+# Run in non-interactive mode (no prompts)
+# NON_INTERACTIVE=true
+
+# Enable dry run mode (show what would be done without doing it)
+# DRY_RUN=true
+
+# Custom cache directory
+# CACHE_DIR="$HOME/.cache/mac-setup"
+
+# Custom state file location
+# STATE_FILE="$HOME/.config/mac-setup/state"

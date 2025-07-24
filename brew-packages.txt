@@ -1,0 +1,119 @@
+# Homebrew packages to install
+# This file contains all formulae installed via Homebrew
+# Comments starting with # are ignored
+
+# Core utilities
+coreutils
+findutils
+gnu-sed
+gawk
+grep
+bc
+
+# Development essentials
+git
+gh  # GitHub CLI
+autoconf
+m4
+readline
+openssl@3
+sqlite
+pcre2
+pkgconf
+
+# Python environment
+python@3.13
+python@3.12
+pipx
+pyenv
+uv
+
+# Node.js environment
+node
+pnpm
+
+# Go environment
+go
+
+# Shell and terminal
+zsh-history-substring-search
+tmux
+tree
+htop
+mactop
+ncdu
+eza  # Modern replacement for ls
+ripgrep
+watch
+wget
+curl
+jq
+telnet
+ssh-copy-id
+sshpass
+ssh-audit
+
+# Text processing and editors
+neovim
+pandoc
+markdown
+ascii-image-converter
+links
+
+# Development tools
+lazygit
+code2prompt
+fswatch
+silicon  # Code screenshots
+tldr
+
+# Network tools
+nmap
+masscan
+sipcalc
+geoip
+httping
+gping
+trippy
+wakeonlan
+croc  # File transfer
+
+# Media and graphics
+ffmpeg
+yt-dlp
+sox
+imagemagick
+tesseract
+
+# DevOps and infrastructure
+ansible
+awscli
+duck  # Cyberduck CLI
+termscp
+
+# Security tools
+john  # John the Ripper
+macmon  # Monitor macOS permissions
+
+# Archive and compression
+p7zip
+libarchive
+zstd
+lz4
+lzo
+
+# Fun utilities
+cmatrix
+wtfutil
+
+# Libraries and dependencies (automatically installed)
+# These are typically installed as dependencies but listed for completeness
+cairo
+fontconfig
+freetype
+glib
+harfbuzz
+libyaml
+ncurses
+pango
+pixman
