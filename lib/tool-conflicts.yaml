@@ -1,0 +1,145 @@
+# Tool Conflicts and Preferences
+# Defines mutually exclusive tools and preference groups
+
+conflicts:
+  # Terminal emulators - only need one
+  terminals:
+    description: "Terminal emulator"
+    tools:
+      - warp
+      - iterm2
+      - wezterm
+      - kitty
+    default: warp
+  
+  # Code editors - typically only need one primary
+  editors:
+    description: "Primary code editor"
+    tools:
+      - visual-studio-code
+      - cursor
+      - sublime-text
+      - zed
+    default: cursor
+  
+  # Package managers for Node.js
+  node_package_managers:
+    description: "Node.js package manager"
+    tools:
+      - pnpm
+      - yarn
+      - npm  # comes with node
+    default: pnpm
+  
+  # Python package/project managers
+  python_project_managers:
+    description: "Python project manager"
+    tools:
+      - poetry
+      - pipenv
+      - hatch
+    default: poetry
+  
+  # API testing tools
+  api_clients:
+    description: "API testing client"
+    tools:
+      - postman
+      - insomnia
+      - bruno
+      - httpie  # CLI, different category
+    default: postman
+  
+  # Database GUIs
+  database_guis:
+    description: "Database GUI client"
+    tools:
+      - tableplus
+      - dbeaver-community
+      - datagrip
+      - sequel-ace
+    default: tableplus
+  
+  # Git GUIs
+  git_guis:
+    description: "Git GUI client"
+    tools:
+      - fork
+      - sourcetree
+      - github  # GitHub Desktop
+      - gitkraken
+    default: fork
+  
+  # Container runtimes
+  container_runtimes:
+    description: "Container runtime"
+    tools:
+      - orbstack
+      - docker
+      - podman-desktop
+      - rancher-desktop
+    default: orbstack
+  
+  # Productivity launchers
+  launchers:
+    description: "Productivity launcher"
+    tools:
+      - raycast
+      - alfred
+      - launchbar
+    default: raycast
+  
+  # Password managers
+  password_managers:
+    description: "Password manager"
+    tools:
+      - 1password
+      - bitwarden
+      - dashlane
+      - keeper
+    default: 1password
+
+# Tools that complement each other (install together)
+bundles:
+  kubernetes:
+    - kubernetes-cli
+    - helm
+    - k9s
+    - kubectx
+    - kustomize
+  
+  python_dev:
+    - python@3.13
+    - pyenv
+    - pipx
+    - poetry
+    - black
+    - ruff
+  
+  node_dev:
+    - node
+    - pnpm
+    - typescript
+    - prettier
+    - eslint
+  
+  git_enhanced:
+    - git
+    - gh
+    - git-lfs
+    - lazygit
+    - diff-so-fancy
+
+# Tools to skip in minimal install
+optional_tools:
+  - git-flow
+  - git-extras
+  - thefuck
+  - cowsay
+  - fortune
+  - lolcat
+  - cmatrix
+  - asciiquarium
+  - sl
+  - figlet
+  - toilet

@@ -1,19 +1,19 @@
 # macOS Development Environment Setup
 
-This repository contains scripts to automatically set up a complete development environment on a fresh macOS installation, recreating a comprehensive setup with modern development tools.
+A **role-based** development environment setup for macOS that installs only the tools you need based on your job function. Choose from predefined roles like DevOps Engineer, Full-Stack Developer, or AI/ML Engineer to get a tailored development environment without the bloat.
 
 ## ✨ Key Features
 
-- **🔄 Resumable Installation** - Automatically resume from where you left off if interrupted
-- **🧪 Dry Run Mode** - Preview what will be installed without making changes
-- **⚙️ Highly Configurable** - Customize every aspect via configuration files
-- **🏃 Non-Interactive Mode** - Perfect for automated deployments
+- **👤 Role-Based Installation** - Select your role(s) and get only relevant tools
+- **🎯 Smart Tool Selection** - Choose between alternatives (e.g., Postman vs Insomnia)
+- **📦 Minimal by Default** - Core tools + role-specific additions only
+- **🔄 No Redundancy** - Shared tools installed only once across multiple roles
+- **🚀 Client-Focused** - No heavy servers; use containers for databases & services
+- **⚙️ Highly Configurable** - Customize via YAML role definitions
 - **🔍 Pre-flight Checks** - Validate system requirements before installation
-- **💊 Health Checks** - Verify successful installation with comprehensive tests
-- **🎯 Modular Design** - Run individual components or the complete setup
-- **🔐 Security Tools** - Built-in secret scanning and security utilities
-- **📦 Modern Package Management** - Declarative configuration with Brewfile
-- **🚀 Performance Optimized** - Parallel installations where possible
+- **💊 Health Checks** - Verify successful installation
+- **🏃 Non-Interactive Mode** - Perfect for automated deployments
+- **🔐 Modern Security** - Built-in security tools and best practices
 
 ## 🚀 Quick Start
 
@@ -25,167 +25,237 @@ cd mac-setup
 # Make scripts executable
 chmod +x *.sh
 
-# Run pre-flight check (recommended)
-./preflight.sh
-
-# Run the main setup script
+# Run the setup (interactive mode)
 ./setup.sh
 
-# Or run with options:
-./setup.sh --dry-run              # See what would be installed without installing
-NON_INTERACTIVE=true ./setup.sh   # Run without prompts
+# Or specify roles directly
+./setup.sh --roles backend,devops
+
+# Skip optional tools
+./setup.sh --skip-optional
+
+# See what roles match your current setup
+./suggest-roles.sh
 ```
+
+## 👥 Available Roles
+
+### 1. DevOps Engineer
+Infrastructure automation, containers, cloud platforms
+- Kubernetes tools (kubectl, helm, k9s)
+- Infrastructure as Code (Terraform, Ansible)
+- Cloud CLIs (AWS, GCP, Azure)
+- Container management
+- CI/CD tools
+
+### 2. Full-Stack Developer
+Frontend + backend + databases
+- Node.js, Python, and other runtimes
+- Frontend build tools
+- Database clients
+- API testing tools
+- Docker for local services
+
+### 3. Backend Developer
+APIs, microservices, server-side development
+- Language runtimes (Python, Go, Rust, Java)
+- Database clients only (no servers)
+- API development tools
+- Testing frameworks
+
+### 4. Frontend Developer
+Web UIs, JavaScript frameworks, CSS
+- Node.js and modern build tools
+- CSS processors and frameworks
+- Browser testing tools
+- Design tool integration
+
+### 5. Network/System Administrator
+Network management and system administration
+- Network analysis tools (nmap, wireshark)
+- System monitoring utilities
+- SSH and remote access tools
+- Configuration management
+
+### 6. AI/ML Engineer
+Machine learning, LLMs, data science
+- Ollama for local LLMs
+- Python ML/DL frameworks
+- Jupyter and notebooks
+- LangChain and AI tools
+
+### 7. Data Engineer
+ETL, data pipelines, analytics
+- Database clients
+- Data processing tools
+- Python data stack
+- Cloud SDKs
+
+### 8. Security Engineer
+Security testing and vulnerability assessment
+- Security scanners
+- Network analysis
+- Cryptography tools
+- Penetration testing utilities
+
+### 9. Mobile Developer
+iOS, Android, and cross-platform development
+- Xcode tools
+- React Native/Flutter
+- Device management
+- Mobile testing tools
 
 ## 📋 What Gets Installed
 
-### System Tools
-- **Homebrew** - Package manager for macOS
-- **Xcode Command Line Tools** - Essential development tools
-- **Core utilities** - GNU coreutils, findutils, sed, awk, grep
-
-### Programming Languages
-- **Python 3.13** - Latest Python with pip, virtualenv, poetry, uv
-- **Node.js v22+** - Latest LTS with npm, yarn, pnpm
-- **Go 1.23+** - Latest Go with workspace setup
-- **Rust** - Via rustup (configurable)
-- **Ruby** - Via rbenv
-- **Java** - OpenJDK (optional)
-
-### Development Tools
-- **Git** with enhanced configuration
-- **GitHub CLI** for repository management
-- **Container runtimes** - OrbStack, Colima, or Docker Desktop (configurable)
-- **Neovim** & **Vim** with plugins
-- **VS Code** & **Cursor** with extensions
-- **Starship** - Cross-shell prompt
-- **Modern CLI tools** - ripgrep, fzf, bat, eza, fd
-- **Security tools** - gitleaks, trufflehog, trivy, age
-- **Version managers** - mise, pyenv, nvm, rbenv
-
-### Shell Environment
-- **Zsh** as default shell with:
-  - Custom aliases and functions
-  - Enhanced completion
-  - Syntax highlighting
-  - History substring search
-  - Starship prompt
-
-### AI Development Tools
-- Claude Code CLI
-- GitHub Copilot CLI
-- Configuration templates
-
-### DevOps Tools
-- **Kubernetes** - kubectl, helm, k9s, kubectx, stern
-- **Infrastructure as Code** - Terraform, Terragrunt, Packer
-- **Configuration Management** - Ansible with ansible-lint
-- **Cloud CLIs** - AWS, Azure, GCP, DigitalOcean
-- **Container tools** - dive, lazydocker, ctop
-- **Monitoring** - Prometheus, Grafana, Loki
-- **CI/CD** - act (GitHub Actions locally), CircleCI, GitLab Runner
+### Core Tools (All Roles)
+- **Git** & **GitHub CLI** - Version control
+- **Modern CLI** - ripgrep, fzf, bat, eza, fd
+- **Editors** - Neovim + VS Code/Cursor
+- **Terminal** - Warp or iTerm2
+- **Shell** - Zsh with Starship prompt
+- **Security** - GPG, SSH, age encryption
+- **Productivity** - Rectangle, Raycast, 1Password
 
 ## 📁 Repository Structure
 
 ```
 .
-├── setup.sh              # Main setup script - orchestrates everything
-├── preflight.sh          # Pre-installation system checks
-├── health-check.sh       # Post-installation verification
-├── common.sh             # Shared functions and utilities
-├── config.sh             # Default configuration values
-├── config.local.sh       # User configuration overrides (create from .example)
-├── state.sh              # Progress tracking and resumability
-├── Brewfile              # Declarative Homebrew package list
-├── brew-packages.txt     # Additional Homebrew packages
-├── python-setup.sh       # Python environment configuration
-├── shell-config.sh       # Shell (Zsh) configuration and dotfiles
-├── dev-tools.sh          # Development tools and IDE setup
-├── devops-tools.sh       # DevOps and cloud tools setup
-├── apps-install.sh       # GUI applications installation
-├── CLAUDE.md             # Instructions for Claude Code
-└── README.md             # This file
+├── setup.sh              # Main role-based setup script
+├── suggest-roles.sh      # Analyze current setup and suggest roles
+├── roles/                # Role definitions (YAML)
+│   ├── core.yaml        # Tools for all developers
+│   ├── devops.yaml      # DevOps Engineer tools
+│   ├── fullstack.yaml   # Full-Stack Developer tools
+│   ├── backend.yaml     # Backend Developer tools
+│   ├── frontend.yaml    # Frontend Developer tools
+│   ├── network-sysadmin.yaml  # Network/Sysadmin tools
+│   ├── ai-ml-engineer.yaml    # AI/ML Engineer tools
+│   ├── data-engineer.yaml     # Data Engineer tools
+│   ├── security-engineer.yaml # Security Engineer tools
+│   └── mobile-developer.yaml  # Mobile Developer tools
+├── lib/                  # Supporting libraries
+│   ├── role-parser.sh   # YAML parsing functions
+│   └── tool-conflicts.yaml # Tool conflict definitions
+├── common.sh            # Shared functions and utilities
+├── config.sh            # Default configuration values
+├── config.local.sh      # User configuration overrides
+├── state.sh             # Progress tracking
+├── preflight.sh         # Pre-installation checks
+├── health-check.sh      # Post-installation verification
+├── python-setup.sh      # Python environment setup
+├── shell-config.sh      # Shell configuration
+├── dev-tools.sh         # Development tools setup
+├── devops-tools.sh      # DevOps tools setup
+├── ai-tools.sh          # AI/ML tools setup
+├── apps-install.sh      # GUI applications
+├── manage-packages.sh   # Package management utilities
+├── CLAUDE.md           # Instructions for Claude Code
+└── README.md           # This file
 ```
 
-## 🔧 Script Details
+## 🎯 How It Works
 
-### setup.sh
-The main orchestrator that:
-- Detects system architecture (Apple Silicon vs Intel)
-- Installs Xcode Command Line Tools
-- Installs and configures Homebrew
-- Runs all other setup scripts in order
-- Creates common directory structure
+### 1. Role Selection
+When you run `./setup.sh`, you'll see:
+```
+Available roles:
 
-### brew-packages.txt
-Contains all Homebrew formulae to install, organized by category:
-- Core utilities
-- Development tools
-- Language environments
-- Network tools
-- Media utilities
+  1) DevOps Engineer        - Infrastructure, containers, cloud
+  2) Full-Stack Developer   - Frontend + backend + databases
+  3) Backend Developer      - APIs, servers, databases
+  4) Frontend Developer     - Web UIs, JavaScript, CSS
+  5) Network/Sysadmin      - Network tools, system administration
+  6) AI/ML Engineer        - Machine learning, LLMs, data science
+  7) Data Engineer         - ETL, data pipelines, analytics
+  8) Security Engineer     - Security testing, vulnerability assessment
+  9) Mobile Developer      - iOS, Android, cross-platform
 
-### python-setup.sh
-Sets up Python development:
-- Installs Python 3.13 via Homebrew
-- Configures pip and essential packages
-- Sets up pipx for tool isolation
-- Creates project templates
-- Configures Python REPL with history and completion
-
-### shell-config.sh
-Configures the shell environment:
-- Sets Zsh as default shell
-- Creates organized ~/.zsh/ structure
-- Installs Starship prompt
-- Sets up aliases and functions
-- Configures git with sensible defaults
-- Creates development-friendly environment variables
-
-### dev-tools.sh
-Installs additional development tools:
-- Node.js global packages (TypeScript, ESLint, etc.)
-- Go development tools
-- Rust toolchain
-- VS Code extensions installer
-- Project template generators
-- AI tool configurations
-
-## ⚙️ Configuration
-
-The setup scripts are highly configurable. Create a `config.local.sh` file to customize your installation:
-
-```bash
-# Copy the example configuration
-cp config.local.sh.example config.local.sh
-
-# Edit with your preferences
-vim config.local.sh
+Select your role(s) - you can choose multiple:
 ```
 
-### Available Configuration Options
+### 2. Tool Preference Selection
+When similar tools exist, you choose:
+```
+Choose API testing client:
+  1) postman (recommended)
+  2) insomnia - Lightweight REST client
+  3) bruno - Open-source API client
+  s) Skip this tool
+Select option (default: 1):
+```
 
-- **Language versions** - Python, Node.js versions
-- **Component selection** - Skip GUI apps, DevOps tools, etc.
-- **Container runtime** - Choose between OrbStack, Docker Desktop, or Colima
-- **Terminal preference** - Warp or iTerm2
-- **Shell configuration** - Starship prompt, Oh My Zsh
-- **Development tools** - Rust, Go, Java installation
+### 3. Smart Installation
+- Core tools are installed for everyone
+- Role-specific tools are added based on selection
+- Duplicate tools are automatically detected and installed only once
+- Optional tools can be skipped
 
-### Running Modes
+## 🔧 Role Configuration
 
+Each role is defined in a YAML file under `roles/`:
+
+```yaml
+name: "Backend Developer"
+description: "APIs, microservices, server-side development"
+
+brew_formulae:
+  - name: python@3.13
+    description: "Python programming language"
+  - name: go
+    description: "Go programming language"
+    optional: true
+    
+brew_casks:
+  - name: postman
+    description: "API testing platform"
+    alternatives:
+      - name: insomnia
+        description: "REST/GraphQL client"
+```
+
+## ⚙️ Usage Examples
+
+### Basic Usage
 ```bash
-# Dry run - see what would be installed
-DRY_RUN=true ./setup.sh
-
-# Non-interactive - no prompts
-NON_INTERACTIVE=true ./setup.sh
-
-# Resume interrupted installation
-./setup.sh  # Automatically resumes from last successful step
-
-# Reset and start fresh
-rm ~/.mac-setup-state
+# Interactive mode - choose roles and preferences
 ./setup.sh
+
+# Install specific roles
+./setup.sh --roles backend,devops
+
+# Skip optional tools
+./setup.sh --skip-optional
+```
+
+### Migration from Existing Setup
+```bash
+# See what roles match your current tools
+./suggest-roles.sh
+
+# Example output:
+# Based on your installed tools, you likely work as:
+# • DevOps Engineer
+#   Confidence: 5 indicators found
+#   Tools found: kubernetes-cli, helm, terraform, docker, k9s
+#
+# Suggested command:
+#   ./setup.sh --roles devops,backend
+```
+
+### Adding Custom Roles
+Create a new YAML file in `roles/`:
+```yaml
+# roles/game-developer.yaml
+name: "Game Developer"
+description: "Game development tools"
+
+brew_formulae:
+  - name: sdl2
+    description: "Graphics library"
+    
+brew_casks:
+  - name: unity-hub
+    description: "Unity game engine"
 ```
 
 ## 🛠️ Manual Steps After Setup

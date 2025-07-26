@@ -1,233 +1,368 @@
 #!/bin/bash
 
-# Mac Environment Setup Script
-# This script will set up a development environment on a fresh macOS installation
-# matching the configuration analyzed from the source system
+# Mac Development Environment Setup - Role-Based Edition
+# This script sets up a development environment based on selected roles
 
 set -euo pipefail
 
-# Color codes for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-# Logging functions
-log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-}
-
-log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-# Check if running on macOS
-if [[ "$OSTYPE" != "darwin"* ]]; then
-    log_error "This script is designed for macOS only"
-    exit 1
-fi
-
-# Get the directory where the script is located
+# Get the directory of this script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-log_info "Starting macOS development environment setup..."
-log_info "Script directory: $SCRIPT_DIR"
+# Source common functions
+source "$SCRIPT_DIR/common.sh"
 
-# Check if running on Apple Silicon or Intel
-ARCH=$(uname -m)
-if [[ "$ARCH" == "arm64" ]]; then
-    log_info "Detected Apple Silicon Mac"
-    HOMEBREW_PREFIX="/opt/homebrew"
-else
-    log_info "Detected Intel Mac"
-    HOMEBREW_PREFIX="/usr/local"
-fi
+# Configuration
+ROLES_DIR="$SCRIPT_DIR/roles"
+SELECTED_ROLES=()
+SELECTED_TOOLS=()
+SKIP_OPTIONAL=false
+AUTO_MODE=false
 
-# Install Xcode Command Line Tools
-log_info "Checking for Xcode Command Line Tools..."
-if ! xcode-select -p &> /dev/null; then
-    log_info "Installing Xcode Command Line Tools..."
-    xcode-select --install
-    log_warning "Please complete the Xcode Command Line Tools installation in the popup window"
-    log_warning "Press Enter to continue after installation is complete..."
-    read -r
-else
-    log_success "Xcode Command Line Tools already installed"
-fi
+# Display welcome message
+show_welcome() {
+    clear
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo "║          Mac Development Environment Setup - v2.0              ║"
+    echo "║                    Role-Based Installation                     ║"
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo ""
+    echo "This script will set up your Mac for development based on your role(s)."
+    echo "You can select multiple roles, and common tools will only be installed once."
+    echo ""
+}
 
-# Install Homebrew
-log_info "Checking for Homebrew..."
-if ! command -v brew &> /dev/null; then
-    log_info "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Display available roles
+show_roles() {
+    echo "Available roles:"
+    echo ""
+    echo "  1) DevOps Engineer        - Infrastructure, containers, cloud"
+    echo "  2) Full-Stack Developer   - Frontend + backend + databases"
+    echo "  3) Backend Developer      - APIs, servers, databases"
+    echo "  4) Frontend Developer     - Web UIs, JavaScript, CSS"
+    echo "  5) Network/Sysadmin      - Network tools, system administration"
+    echo "  6) AI/ML Engineer        - Machine learning, LLMs, data science"
+    echo "  7) Data Engineer         - ETL, data pipelines, analytics"
+    echo "  8) Security Engineer     - Security testing, vulnerability assessment"
+    echo "  9) Mobile Developer      - iOS, Android, cross-platform"
+    echo ""
+}
+
+# Role selection
+select_roles() {
+    local roles_map=(
+        "devops"
+        "fullstack"
+        "backend"
+        "frontend"
+        "network-sysadmin"
+        "ai-ml-engineer"
+        "data-engineer"
+        "security-engineer"
+        "mobile-developer"
+    )
     
-    # Add Homebrew to PATH for this session
-    if [[ "$ARCH" == "arm64" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+    echo "Select your role(s) - you can choose multiple:"
+    echo "Enter numbers separated by spaces (e.g., '1 3 6'), or 'all' for all roles:"
+    read -r selection
+    
+    if [[ "$selection" == "all" ]]; then
+        SELECTED_ROLES=("${roles_map[@]}")
     else
-        eval "$(/usr/local/bin/brew shellenv)"
+        for num in $selection; do
+            if [[ "$num" =~ ^[1-9]$ ]] && [ "$num" -le "${#roles_map[@]}" ]; then
+                SELECTED_ROLES+=("${roles_map[$((num-1))]}")
+            else
+                log_warning "Invalid selection: $num"
+            fi
+        done
     fi
-else
-    log_success "Homebrew already installed"
-fi
-
-# Update Homebrew
-log_info "Updating Homebrew..."
-brew update
-
-# Install essential packages first
-log_info "Installing essential packages..."
-ESSENTIALS=(
-    "git"
-    "wget"
-    "curl"
-    "jq"
-    "coreutils"
-    "findutils"
-    "gnu-sed"
-    "gawk"
-    "grep"
-)
-
-for package in "${ESSENTIALS[@]}"; do
-    if brew list "$package" &> /dev/null; then
-        log_success "$package already installed"
-    else
-        log_info "Installing $package..."
-        brew install "$package"
+    
+    if [ ${#SELECTED_ROLES[@]} -eq 0 ]; then
+        log_error "No roles selected. Exiting."
+        exit 1
     fi
-done
+    
+    echo ""
+    log_info "Selected roles:"
+    for role in "${SELECTED_ROLES[@]}"; do
+        echo "  - $role"
+    done
+    echo ""
+}
 
-# Install all packages from brew-packages.txt
-if [[ -f "$SCRIPT_DIR/brew-packages.txt" ]]; then
-    log_info "Installing packages from brew-packages.txt..."
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        # Skip empty lines and comments
-        if [[ -z "$line" ]] || [[ "$line" =~ ^# ]]; then
+# Parse YAML-like format (simple parser)
+parse_yaml_array() {
+    local file=$1
+    local section=$2
+    local in_section=false
+    local indent_level=0
+    
+    while IFS= read -r line; do
+        # Skip comments and empty lines
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "${line// }" ]] && continue
+        
+        # Check section start
+        if [[ "$line" =~ ^${section}: ]]; then
+            in_section=true
             continue
         fi
         
-        # Remove inline comments and trim whitespace
-        package=$(echo "$line" | sed 's/#.*$//' | xargs)
-        
-        # Skip if package name is empty after removing comments
-        if [[ -z "$package" ]]; then
-            continue
+        # Check if we've moved to a new top-level section
+        if [[ "$line" =~ ^[^[:space:]] ]] && [ "$in_section" = true ]; then
+            break
         fi
         
-        if brew list "$package" &> /dev/null 2>&1; then
-            log_success "$package already installed"
+        # Extract items if in section
+        if [ "$in_section" = true ]; then
+            if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*name:[[:space:]]*(.+) ]]; then
+                echo "${BASH_REMATCH[1]}"
+            fi
+        fi
+    done < "$file"
+}
+
+# Install tool with preference handling
+install_with_preference() {
+    local tool=$1
+    local alternatives=$2
+    local description=$3
+    
+    if [ -n "$alternatives" ]; then
+        echo ""
+        log_info "Multiple options available for: $description"
+        echo "  1) $tool (recommended)"
+        
+        local alt_array=($alternatives)
+        local i=2
+        for alt in "${alt_array[@]}"; do
+            echo "  $i) $alt"
+            ((i++))
+        done
+        echo "  s) Skip this category"
+        
+        read -p "Select option (default: 1): " choice
+        
+        case "$choice" in
+            s|S)
+                log_info "Skipping $description"
+                return
+                ;;
+            [2-9])
+                local idx=$((choice-2))
+                if [ $idx -lt ${#alt_array[@]} ]; then
+                    tool="${alt_array[$idx]}"
+                fi
+                ;;
+        esac
+    fi
+    
+    SELECTED_TOOLS+=("$tool")
+}
+
+# Process role configurations
+process_roles() {
+    # First, always install core tools
+    log_info "Processing core tools..."
+    local core_file="$ROLES_DIR/core.yaml"
+    
+    if [ -f "$core_file" ]; then
+        # Extract tools from core.yaml
+        local core_formulae=($(parse_yaml_array "$core_file" "brew_formulae"))
+        local core_casks=($(parse_yaml_array "$core_file" "brew_casks"))
+        
+        SELECTED_TOOLS+=("${core_formulae[@]}")
+        
+        # Handle casks with alternatives
+        for cask in "${core_casks[@]}"; do
+            # For now, just add them - in full implementation, handle alternatives
+            SELECTED_TOOLS+=("cask:$cask")
+        done
+    fi
+    
+    # Process selected roles
+    for role in "${SELECTED_ROLES[@]}"; do
+        local role_file="$ROLES_DIR/${role}.yaml"
+        
+        if [ -f "$role_file" ]; then
+            log_info "Processing role: $role"
+            
+            # Extract tools from role file
+            local formulae=($(parse_yaml_array "$role_file" "brew_formulae"))
+            local casks=($(parse_yaml_array "$role_file" "brew_casks"))
+            
+            SELECTED_TOOLS+=("${formulae[@]}")
+            for cask in "${casks[@]}"; do
+                SELECTED_TOOLS+=("cask:$cask")
+            done
         else
-            log_info "Installing $package..."
-            brew install "$package" || log_warning "Failed to install $package"
+            log_warning "Role file not found: $role_file"
         fi
-    done < "$SCRIPT_DIR/brew-packages.txt"
-else
-    log_warning "brew-packages.txt not found, skipping bulk package installation"
-fi
+    done
+    
+    # Remove duplicates
+    SELECTED_TOOLS=($(echo "${SELECTED_TOOLS[@]}" | tr ' ' '\n' | sort -u))
+}
 
-# Set up Python environment
-if [[ -f "$SCRIPT_DIR/python-setup.sh" ]]; then
-    log_info "Setting up Python environment..."
-    bash "$SCRIPT_DIR/python-setup.sh"
-else
-    log_warning "python-setup.sh not found, skipping Python setup"
-fi
-
-# Set up shell configuration
-if [[ -f "$SCRIPT_DIR/shell-config.sh" ]]; then
-    log_info "Setting up shell configuration..."
-    bash "$SCRIPT_DIR/shell-config.sh"
-else
-    log_warning "shell-config.sh not found, skipping shell configuration"
-fi
-
-# Set up development tools
-if [[ -f "$SCRIPT_DIR/dev-tools.sh" ]]; then
-    log_info "Setting up development tools..."
-    bash "$SCRIPT_DIR/dev-tools.sh"
-else
-    log_warning "dev-tools.sh not found, skipping development tools setup"
-fi
-
-# Install GUI applications
-if [[ -f "$SCRIPT_DIR/apps-install.sh" ]]; then
-    log_info "Installing GUI applications..."
-    bash "$SCRIPT_DIR/apps-install.sh"
-else
-    log_warning "apps-install.sh not found, skipping GUI applications"
-fi
-
-# Set up DevOps and infrastructure tools
-if [[ -f "$SCRIPT_DIR/devops-tools.sh" ]]; then
-    log_info "Setting up DevOps and infrastructure tools..."
-    bash "$SCRIPT_DIR/devops-tools.sh"
-else
-    log_warning "devops-tools.sh not found, skipping DevOps tools"
-fi
-
-# Create common directories
-log_info "Creating common directories..."
-DIRECTORIES=(
-    "$HOME/bin"
-    "$HOME/Projects"
-    "$HOME/.config"
-    "$HOME/.local/bin"
-)
-
-for dir in "${DIRECTORIES[@]}"; do
-    if [[ ! -d "$dir" ]]; then
-        mkdir -p "$dir"
-        log_success "Created $dir"
-    else
-        log_success "$dir already exists"
+# Installation summary
+show_summary() {
+    echo ""
+    echo "════════════════════════════════════════════════════════════════"
+    echo "Installation Summary"
+    echo "════════════════════════════════════════════════════════════════"
+    echo ""
+    echo "Roles selected: ${#SELECTED_ROLES[@]}"
+    for role in "${SELECTED_ROLES[@]}"; do
+        echo "  - $role"
+    done
+    echo ""
+    echo "Tools to install: ${#SELECTED_TOOLS[@]}"
+    echo ""
+    read -p "Proceed with installation? (y/n) " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Installation cancelled."
+        exit 0
     fi
-done
+}
 
-# Final setup tasks
-log_info "Running final setup tasks..."
+# Main installation
+perform_installation() {
+    log_info "Starting installation..."
+    
+    # Install Homebrew if needed
+    if ! command -v brew &> /dev/null; then
+        log_info "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    
+    # Update Homebrew
+    log_info "Updating Homebrew..."
+    brew update
+    
+    # Install tools
+    local formulae=()
+    local casks=()
+    
+    for tool in "${SELECTED_TOOLS[@]}"; do
+        if [[ "$tool" == cask:* ]]; then
+            casks+=("${tool#cask:}")
+        else
+            formulae+=("$tool")
+        fi
+    done
+    
+    # Install formulae
+    if [ ${#formulae[@]} -gt 0 ]; then
+        log_info "Installing Homebrew formulae..."
+        for formula in "${formulae[@]}"; do
+            if brew list "$formula" &> /dev/null 2>&1; then
+                log_success "$formula already installed"
+            else
+                log_info "Installing $formula..."
+                brew install "$formula" || log_warning "Failed to install $formula"
+            fi
+        done
+    fi
+    
+    # Install casks
+    if [ ${#casks[@]} -gt 0 ]; then
+        log_info "Installing Homebrew casks..."
+        for cask in "${casks[@]}"; do
+            if brew list --cask "$cask" &> /dev/null 2>&1; then
+                log_success "$cask already installed"
+            else
+                log_info "Installing $cask..."
+                brew install --cask "$cask" || log_warning "Failed to install $cask"
+            fi
+        done
+    fi
+}
 
-# Set macOS defaults for development
-log_info "Setting macOS defaults for development..."
-# Show hidden files in Finder
-defaults write com.apple.finder AppleShowAllFiles -bool true
-# Show file extensions in Finder
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-# Enable text selection in Quick Look
-defaults write com.apple.finder QLEnableTextSelection -bool true
-# Restart Finder to apply changes
-killall Finder || true
+# Post-installation setup
+post_installation() {
+    log_info "Running post-installation setup..."
+    
+    # Run shell configuration
+    if [ -f "$SCRIPT_DIR/shell-config.sh" ]; then
+        log_info "Configuring shell..."
+        bash "$SCRIPT_DIR/shell-config.sh"
+    fi
+    
+    # Role-specific setup
+    for role in "${SELECTED_ROLES[@]}"; do
+        case "$role" in
+            "ai-ml-engineer")
+                if command -v ollama &> /dev/null; then
+                    log_info "Run 'ollama-setup' to download AI models"
+                fi
+                ;;
+            "devops")
+                log_info "Remember to authenticate cloud CLIs:"
+                echo "  - AWS: aws configure"
+                echo "  - GCP: gcloud auth login"
+                echo "  - Azure: az login"
+                ;;
+            "mobile-developer")
+                log_info "Remember to:"
+                echo "  - Install Xcode from Mac App Store"
+                echo "  - Run: sudo xcode-select --switch /Applications/Xcode.app"
+                echo "  - Accept Xcode license: sudo xcodebuild -license accept"
+                ;;
+        esac
+    done
+}
 
-log_success "Complete environment setup finished!"
-log_info "Please review the following:"
-echo "1. Restart your terminal or run: source ~/.zshrc"
-echo "2. GUI applications installed (if selected):"
-echo "   - Warp (modern terminal)"
-echo "   - Visual Studio Code"
-echo "   - OrbStack (Docker alternative)"
-echo "   - Database tools, API clients, and more"
-echo "3. Set up your Git configuration:"
-echo "   git config --global user.name 'Your Name'"
-echo "   git config --global user.email 'your.email@example.com'"
-echo "4. Add any personal SSH keys to ~/.ssh/"
-echo "5. Configure cloud CLIs:"
-echo "   - AWS: aws configure"
-echo "   - GitHub: gh auth login"
-echo "   - Azure: az login"
-echo "6. Launch VS Code and install extensions: install-vscode-extensions"
-echo "7. Use helper commands:"
-echo "   - dev-help: Show all custom commands"
-echo "   - new-project: Create new projects"
-echo "   - kube-switch: Switch Kubernetes contexts"
-echo "   - aws-switch: Switch AWS profiles"
+# Main execution
+main() {
+    show_welcome
+    
+    # Check for command line arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --roles)
+                IFS=',' read -ra SELECTED_ROLES <<< "$2"
+                AUTO_MODE=true
+                shift 2
+                ;;
+            --skip-optional)
+                SKIP_OPTIONAL=true
+                shift
+                ;;
+            *)
+                echo "Unknown option: $1"
+                exit 1
+                ;;
+        esac
+    done
+    
+    # Interactive role selection if not provided
+    if [ "$AUTO_MODE" = false ]; then
+        show_roles
+        select_roles
+    fi
+    
+    # Process selected roles
+    process_roles
+    
+    # Show summary and confirm
+    show_summary
+    
+    # Perform installation
+    perform_installation
+    
+    # Post-installation setup
+    post_installation
+    
+    log_success "Installation complete!"
+    echo ""
+    echo "Next steps:"
+    echo "  1. Restart your terminal or run: source ~/.zshrc"
+    echo "  2. Run role-specific setup commands shown above"
+    echo "  3. Configure your preferred tools and editors"
+    echo ""
+    echo "For help and commands, run: dev-help"
+}
 
-log_success "Setup script completed!"
+# Run main function
+main "$@"

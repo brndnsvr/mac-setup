@@ -83,7 +83,12 @@ for tool in "${PIPX_TOOLS[@]}"; do
         log_success "$tool already installed via pipx"
     else
         log_info "Installing $tool via pipx..."
-        pipx install "$tool" || log_warning "Failed to install $tool"
+        # Jupyter needs special handling with --include-deps
+        if [[ "$tool" == "jupyter" ]]; then
+            pipx install "$tool" --include-deps || log_warning "Failed to install $tool"
+        else
+            pipx install "$tool" || log_warning "Failed to install $tool"
+        fi
     fi
 done
 

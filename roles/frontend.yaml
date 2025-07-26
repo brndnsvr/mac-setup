@@ -1,0 +1,187 @@
+# Frontend Developer Role
+name: "Frontend Developer"
+description: "Web applications, UI/UX, and client-side development"
+
+brew_formulae:
+  # Core Runtime
+  - name: node
+    description: "JavaScript runtime"
+  
+  # Package Managers
+  - name: pnpm
+    description: "Fast, efficient package manager"
+    alternatives:
+      - name: yarn
+        description: "Alternative package manager"
+  
+  # Build Tools
+  - name: watchman
+    description: "File watching service"
+  - name: mkcert
+    description: "Local HTTPS certificates"
+  
+  # Image Optimization
+  - name: imagemagick
+    description: "Image manipulation"
+  - name: jpegoptim
+    description: "JPEG optimizer"
+    optional: true
+  - name: optipng
+    description: "PNG optimizer"
+    optional: true
+  - name: svgo
+    description: "SVG optimizer"
+    optional: true
+  
+  # API Testing
+  - name: httpie
+    description: "User-friendly HTTP client"
+  
+  # Browser Testing
+  - name: selenium-server
+    description: "Browser automation"
+    optional: true
+  - name: chromedriver
+    description: "Chrome automation"
+    optional: true
+
+brew_casks:
+  # Code Editors
+  - name: visual-studio-code
+    description: "Primary code editor"
+    alternatives:
+      - name: cursor
+        description: "AI-powered VS Code fork"
+      - name: webstorm
+        description: "JetBrains IDE for JavaScript"
+        paid: true
+  
+  # Design Tools
+  - name: figma
+    description: "UI/UX design tool"
+  - name: sketch
+    description: "Mac design tool"
+    optional: true
+    paid: true
+  
+  # API Testing
+  - name: postman
+    description: "API testing platform"
+    alternatives:
+      - name: insomnia
+        description: "Lightweight API client"
+  
+  # Browser DevTools
+  - name: responsively
+    description: "Test responsive designs"
+    optional: true
+  
+  # Version Control
+  - name: github
+    description: "GitHub Desktop"
+  - name: fork
+    description: "Git GUI client"
+    alternatives:
+      - name: sourcetree
+        description: "Free Git GUI"
+  
+  # Color Tools
+  - name: colorsnapper
+    description: "Color picker"
+    optional: true
+    paid: true
+
+npm_packages:
+  # Core Development
+  - name: typescript
+    description: "TypeScript compiler"
+  - name: prettier
+    description: "Code formatter"
+  - name: eslint
+    description: "JavaScript linter"
+  - name: stylelint
+    description: "CSS linter"
+    optional: true
+  
+  # Dev Servers & Tools
+  - name: vite
+    description: "Next generation frontend tooling"
+  - name: serve
+    description: "Static file server"
+  - name: http-server
+    description: "Simple HTTP server"
+  - name: browser-sync
+    description: "Live-reload dev server"
+    optional: true
+  
+  # Build Tools
+  - name: webpack-cli
+    description: "Module bundler CLI"
+    optional: true
+  - name: parcel
+    description: "Zero-config build tool"
+    optional: true
+  
+  # CSS Tools
+  - name: sass
+    description: "CSS preprocessor"
+    optional: true
+  - name: postcss-cli
+    description: "CSS transformer"
+    optional: true
+  - name: tailwindcss
+    description: "Utility-first CSS"
+    optional: true
+  
+  # Testing Tools
+  - name: jest
+    description: "JavaScript testing"
+    optional: true
+  - name: cypress
+    description: "E2E testing"
+    optional: true
+  - name: playwright
+    description: "Cross-browser testing"
+    optional: true
+  
+  # Framework CLIs (ask which ones)
+  - name: create-react-app
+    description: "React app generator"
+    optional: true
+  - name: "@angular/cli"
+    description: "Angular CLI"
+    optional: true
+  - name: "@vue/cli"
+    description: "Vue CLI"
+    optional: true
+  - name: create-next-app
+    description: "Next.js generator"
+    optional: true
+  - name: "@sveltejs/kit"
+    description: "SvelteKit CLI"
+    optional: true
+
+css_frameworks:
+  # Ask preferences
+  - tailwindcss
+  - bootstrap
+  - bulma
+  - material-ui
+  - ant-design
+
+javascript_frameworks:
+  # Ask preferences
+  - react
+  - vue
+  - angular
+  - svelte
+  - solid
+  - qwik
+
+aliases:
+  - "alias ns='npm start'"
+  - "alias nr='npm run'"
+  - "alias nb='npm run build'"
+  - "alias nt='npm test'"
+  - "alias ni='npm install'"
+  - "alias dev='npm run dev'"

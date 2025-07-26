@@ -1,0 +1,165 @@
+# Full-Stack Developer Role
+name: "Full-Stack Developer"
+description: "Frontend, backend, databases, and deployment"
+
+brew_formulae:
+  # Languages & Runtimes
+  - name: node
+    description: "JavaScript runtime"
+  - name: python@3.13
+    description: "Python programming language"
+  - name: go
+    description: "Go programming language"
+    optional: true
+  - name: rust
+    description: "Rust programming language"
+    optional: true
+  
+  # Package Managers
+  - name: pnpm
+    description: "Fast, disk space efficient package manager"
+    alternatives:
+      - name: yarn
+        description: "Facebook's package manager"
+  - name: pyenv
+    description: "Python version management"
+  - name: pipx
+    description: "Install Python CLI tools"
+  - name: uv
+    description: "Fast Python package installer"
+  
+  # Database CLIs
+  - name: postgresql@16
+    description: "PostgreSQL client tools"
+  - name: redis
+    description: "Redis client and server"
+  - name: sqlite
+    description: "SQLite database"
+  
+  # Development Tools
+  - name: docker-compose
+    description: "Multi-container applications"
+  - name: mkcert
+    description: "Local HTTPS certificates"
+  - name: ngrok
+    description: "Secure tunnels to localhost"
+    optional: true
+  
+  # API Tools
+  - name: httpie
+    description: "User-friendly HTTP client"
+  - name: grpcurl
+    description: "gRPC client"
+    optional: true
+  - name: websocat
+    description: "WebSocket client"
+    optional: true
+
+brew_casks:
+  # IDEs & Editors
+  - name: cursor
+    description: "AI-powered code editor"
+    alternatives:
+      - name: visual-studio-code
+        description: "Microsoft's code editor"
+      - name: webstorm
+        description: "JetBrains JavaScript IDE"
+        paid: true
+  
+  # API Development
+  - name: postman
+    description: "API platform"
+    alternatives:
+      - name: insomnia
+        description: "REST/GraphQL client"
+      - name: bruno
+        description: "Open-source API client"
+  
+  # Database Tools
+  - name: tableplus
+    description: "Modern database GUI"
+    alternatives:
+      - name: dbeaver-community
+        description: "Free universal database tool"
+  
+  # Containers
+  - name: orbstack
+    description: "Fast container runtime"
+    alternatives:
+      - name: docker
+        description: "Docker Desktop"
+  
+  # Git GUI
+  - name: github
+    description: "GitHub Desktop"
+  - name: fork
+    description: "Fast git client"
+    alternatives:
+      - name: sourcetree
+        description: "Free git GUI"
+
+pipx_packages:
+  - name: poetry
+    description: "Python dependency management"
+    alternatives:
+      - name: pipenv
+        description: "Python dev workflow"
+  - name: black
+    description: "Python code formatter"
+  - name: cookiecutter
+    description: "Project templates"
+
+npm_packages:
+  - name: typescript
+    description: "TypeScript compiler"
+  - name: ts-node
+    description: "TypeScript execution"
+  - name: prettier
+    description: "Code formatter"
+  - name: eslint
+    description: "JavaScript linter"
+  - name: nodemon
+    description: "Auto-restart node apps"
+  - name: concurrently
+    description: "Run multiple commands"
+  - name: serve
+    description: "Static file server"
+  - name: npm-check-updates
+    description: "Update package.json"
+
+python_packages:
+  # Virtual environment packages
+  - django           # Web framework
+  - flask           # Micro web framework
+  - fastapi         # Modern API framework
+  - uvicorn         # ASGI server
+  - pytest          # Testing framework
+  - black           # Code formatter
+  - ruff            # Fast Python linter
+
+frontend_frameworks:
+  # Ask which to set up
+  - react
+  - vue
+  - angular
+  - svelte
+  - nextjs
+  - nuxt
+  - remix
+
+databases:
+  # Container-based, ask which to set up
+  - postgresql
+  - mysql
+  - mongodb
+  - redis
+  - elasticsearch
+
+aliases:
+  - "alias ns='npm start'"
+  - "alias nr='npm run'"
+  - "alias nt='npm test'"
+  - "alias py='python'"
+  - "alias pip='pip3'"
+  - "alias dcu='docker-compose up'"
+  - "alias dcd='docker-compose down'"

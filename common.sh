@@ -60,7 +60,8 @@ safe_brew_install() {
         log_success "$package already installed"
     else
         log_info "Installing $package..."
-        if brew install "$package"; then
+        # Ensure correct HOMEBREW_NO_AUTO_UPDATE value
+        if HOMEBREW_NO_AUTO_UPDATE= brew install "$package"; then
             log_success "$package installed successfully"
         else
             log_error "Failed to install $package"
@@ -76,7 +77,8 @@ safe_cask_install() {
         log_success "$app already installed"
     else
         log_info "Installing $app..."
-        if brew install --cask "$app"; then
+        # Ensure correct HOMEBREW_NO_AUTO_UPDATE value
+        if HOMEBREW_NO_AUTO_UPDATE= brew install --cask "$app"; then
             log_success "$app installed successfully"
         else
             log_error "Failed to install $app"

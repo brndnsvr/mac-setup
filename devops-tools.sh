@@ -5,29 +5,13 @@
 
 set -euo pipefail
 
-# Color codes for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Get script directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Logging functions
-log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-}
+# Source common functions
+source "${SCRIPT_DIR}/common.sh"
 
-log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
+# Note: Color codes and logging functions are now provided by common.sh
 
 log_info "Setting up DevOps and infrastructure tools..."
 
@@ -49,7 +33,7 @@ for tool in "${IaC_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
@@ -75,7 +59,7 @@ for tool in "${K8S_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
@@ -97,7 +81,7 @@ for tool in "${CONTAINER_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
@@ -117,7 +101,7 @@ for tool in "${CLOUD_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
@@ -138,7 +122,7 @@ for tool in "${MONITORING_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
@@ -167,7 +151,7 @@ for tool in "${NETWORK_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
@@ -188,7 +172,7 @@ for tool in "${CICD_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
@@ -211,7 +195,7 @@ for tool in "${SECURITY_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
@@ -237,34 +221,59 @@ for tool in "${DB_TOOLS[@]}"; do
         log_success "$tool already installed"
     else
         log_info "Installing $tool..."
-        brew install "$tool" || log_warning "Failed to install $tool"
+        HOMEBREW_NO_AUTO_UPDATE= brew install "$tool" || log_warning "Failed to install $tool"
     fi
 done
 
 # Install Python DevOps packages
 log_info "Installing Python DevOps packages..."
-if command -v pip3 &> /dev/null; then
-    PYTHON_DEVOPS=(
-        "ansible"                 # Already installed via brew, but getting latest
+
+# CLI tools that should be installed with pipx
+if command -v pipx &> /dev/null; then
+    PYTHON_CLI_TOOLS=(
+        # Note: ansible is already installed via Homebrew
         "ansible-lint"            # Ansible linting
         "molecule"                # Ansible testing
-        "testinfra"               # Infrastructure testing
-        "pexpect"                 # Expect for Python
-        "netmiko"                 # Network device automation
-        "napalm"                  # Network automation
-        "nornir"                  # Network automation framework
-        "paramiko"                # SSH client
-        "fabric"                  # Remote execution
-        "invoke"                  # Task execution
         "supervisor"              # Process control
         "locust"                  # Load testing
     )
     
-    for package in "${PYTHON_DEVOPS[@]}"; do
-        log_info "Installing Python package: $package..."
-        pip3 install --user "$package" || log_warning "Failed to install $package"
+    for tool in "${PYTHON_CLI_TOOLS[@]}"; do
+        if pipx list | grep -q "$tool"; then
+            log_success "$tool already installed via pipx"
+        else
+            log_info "Installing $tool via pipx..."
+            pipx install "$tool" || log_warning "Failed to install $tool"
+        fi
     done
+else
+    log_warning "pipx not found - please install it first"
 fi
+
+# Python libraries that need virtual environments
+log_info "Creating requirements file for Python libraries..."
+cat > "$HOME/.mac-setup-python-libs.txt" << 'EOF'
+# Python libraries for DevOps automation
+# Install these in a virtual environment:
+# python3 -m venv devops-env
+# source devops-env/bin/activate
+# pip install -r ~/.mac-setup-python-libs.txt
+
+testinfra               # Infrastructure testing
+pexpect                 # Expect for Python
+netmiko                 # Network device automation
+napalm                  # Network automation
+nornir                  # Network automation framework
+paramiko                # SSH client
+fabric                  # Remote execution
+invoke                  # Task execution
+EOF
+
+log_info "Python libraries saved to ~/.mac-setup-python-libs.txt"
+log_info "To use these libraries, create a virtual environment:"
+log_info "  python3 -m venv devops-env"
+log_info "  source devops-env/bin/activate"
+log_info "  pip install -r ~/.mac-setup-python-libs.txt"
 
 # Create DevOps helper scripts
 log_info "Creating DevOps helper scripts..."

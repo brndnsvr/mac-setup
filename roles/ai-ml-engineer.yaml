@@ -1,0 +1,149 @@
+# AI/ML Engineer Role
+name: "AI/ML Engineer"
+description: "Machine learning, deep learning, LLMs, and AI application development"
+
+brew_formulae:
+  # Languages
+  - name: python@3.13
+    description: "Primary ML language"
+  - name: node
+    description: "For JS-based AI tools"
+    optional: true
+  
+  # Python Environment
+  - name: pyenv
+    description: "Python version management"
+  - name: pipx
+    description: "Python CLI tools"
+  - name: uv
+    description: "Fast package installer"
+  
+  # LLM Tools
+  - name: ollama
+    description: "Run LLMs locally"
+  - name: llm
+    description: "CLI for LLMs"
+  
+  # Data Processing
+  - name: jq
+    description: "JSON processor"
+  - name: yq
+    description: "YAML processor"
+  - name: csvkit
+    description: "CSV utilities"
+    optional: true
+  
+  # GPU Support (Mac)
+  - name: metal-cpp
+    description: "Apple Metal framework"
+    optional: true
+
+brew_casks:
+  # IDEs
+  - name: cursor
+    description: "AI-powered code editor"
+    alternatives:
+      - name: visual-studio-code
+        description: "Standard VS Code"
+  
+  # LLM GUIs
+  - name: lm-studio
+    description: "Run LLMs with GUI"
+  - name: chatgpt
+    description: "Official ChatGPT app"
+    optional: true
+  - name: diffusionbee
+    description: "Stable Diffusion GUI"
+    optional: true
+  
+  # Data Science
+  - name: jupyter-notebook-viewer
+    description: "View Jupyter notebooks"
+    optional: true
+  
+  # API Testing
+  - name: postman
+    description: "API development"
+    alternatives:
+      - name: insomnia
+        description: "REST client"
+
+pipx_packages:
+  - name: jupyter
+    description: "Interactive notebooks"
+  - name: ipython
+    description: "Enhanced Python shell"
+  - name: poetry
+    description: "Dependency management"
+  - name: black
+    description: "Code formatter"
+  - name: ruff
+    description: "Fast linter"
+  - name: aider-chat
+    description: "AI pair programming"
+  - name: gpt-engineer
+    description: "AI code generation"
+  - name: litellm
+    description: "LLM proxy"
+  - name: langchain-cli
+    description: "LangChain CLI"
+
+python_packages:
+  # Core ML/DL (virtual env)
+  - numpy           # Numerical computing
+  - pandas          # Data manipulation
+  - matplotlib      # Plotting
+  - seaborn        # Statistical plots
+  - scikit-learn   # Traditional ML
+  - torch          # PyTorch
+  - tensorflow     # TensorFlow
+  - jax            # Google's ML framework
+  
+  # LLM Development
+  - langchain      # LLM applications
+  - langchain-community
+  - llama-index    # Data framework for LLMs
+  - openai         # OpenAI API
+  - anthropic      # Claude API
+  - transformers   # Hugging Face
+  - datasets       # HF datasets
+  
+  # Vector DBs & Embeddings
+  - chromadb       # Vector database
+  - faiss-cpu      # Similarity search
+  - sentence-transformers
+  - tiktoken       # Tokenization
+  
+  # Experiment Tracking
+  - mlflow         # ML lifecycle
+  - wandb          # Weights & Biases
+  - tensorboard    # Visualization
+
+npm_packages:
+  - name: "@xenova/transformers"
+    description: "JS transformers"
+    optional: true
+  - name: langchainjs
+    description: "LangChain for JS"
+    optional: true
+
+model_recommendations:
+  local_llms:
+    - llama3.2
+    - mistral
+    - codellama
+    - phi3
+    - qwen2.5-coder
+  
+  cloud_apis:
+    - openai
+    - anthropic
+    - google-ai
+    - cohere
+
+aliases:
+  - "alias jl='jupyter lab'"
+  - "alias jn='jupyter notebook'"
+  - "alias ipy='ipython'"
+  - "alias llama='ollama run llama3.2'"
+  - "alias codellm='ollama run codellama'"

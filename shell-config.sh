@@ -412,7 +412,7 @@ export GPG_TTY=$(tty)
 
 # Homebrew settings
 export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=0
+export HOMEBREW_NO_AUTO_UPDATE=
 
 # Development settings
 export PYTHONDONTWRITEBYTECODE=1

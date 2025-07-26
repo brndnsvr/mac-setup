@@ -1,0 +1,141 @@
+# DevOps Engineer Role
+name: "DevOps Engineer"
+description: "Infrastructure automation, CI/CD, containers, and cloud platforms"
+
+brew_formulae:
+  # Container & Orchestration
+  - name: docker-compose
+    description: "Multi-container Docker apps"
+  - name: kubernetes-cli
+    description: "Kubernetes command-line tool"
+  - name: helm
+    description: "Kubernetes package manager"
+  - name: k9s
+    description: "Terminal UI for Kubernetes"
+  - name: kubectx
+    description: "Switch between clusters/namespaces"
+  - name: stern
+    description: "Multi-pod log tailing"
+  - name: kustomize
+    description: "Kubernetes native configuration"
+  
+  # Infrastructure as Code
+  - name: terraform
+    description: "Infrastructure provisioning"
+  - name: ansible
+    description: "IT automation"
+  - name: packer
+    description: "Machine image builder"
+  
+  # Cloud CLIs (ask which ones)
+  - name: awscli
+    description: "Amazon Web Services CLI"
+    optional: true
+  - name: azure-cli
+    description: "Microsoft Azure CLI"
+    optional: true
+  - name: google-cloud-sdk
+    description: "Google Cloud Platform CLI"
+    optional: true
+  - name: doctl
+    description: "DigitalOcean CLI"
+    optional: true
+  
+  # CI/CD
+  - name: act
+    description: "Run GitHub Actions locally"
+  - name: gitlab-runner
+    description: "GitLab CI runner"
+    optional: true
+  - name: circleci
+    description: "CircleCI CLI"
+    optional: true
+  
+  # Monitoring & Observability Clients
+  - name: promtool
+    description: "Prometheus rule checker"
+    optional: true
+  - name: amtool
+    description: "Alertmanager CLI"
+    optional: true
+  
+  # Security Scanning
+  - name: trivy
+    description: "Container vulnerability scanner"
+  - name: tfsec
+    description: "Terraform security scanner"
+  - name: gitleaks
+    description: "Detect secrets in git repos"
+  
+  # HashiCorp Suite (optional)
+  - name: vault
+    description: "Secrets management"
+    optional: true
+  - name: consul
+    description: "Service discovery & mesh"
+    optional: true
+  - name: terragrunt
+    description: "Terraform wrapper"
+    optional: true
+
+brew_casks:
+  # Container Management
+  - name: orbstack
+    description: "Fast, light container/Linux runtime"
+    alternatives:
+      - name: docker
+        description: "Docker Desktop (heavier)"
+      - name: podman-desktop
+        description: "Open source Docker alternative"
+  
+  # Kubernetes Tools
+  - name: lens
+    description: "Kubernetes IDE"
+    optional: true
+  
+  # API Testing
+  - name: postman
+    description: "API development platform"
+    alternatives:
+      - name: insomnia
+        description: "Lightweight API client"
+      - name: bruno
+        description: "Open-source API client"
+  
+  # Database Management
+  - name: tableplus
+    description: "Modern database GUI"
+  
+  # Cloud Storage
+  - name: cyberduck
+    description: "Cloud storage browser"
+    optional: true
+
+pipx_packages:
+  - name: ansible-lint
+    description: "Ansible playbook linter"
+  - name: aws-sam-cli
+    description: "AWS Serverless Application Model CLI"
+    optional: true
+
+python_packages:
+  # These need virtual environments
+  - boto3          # AWS SDK
+  - azure-mgmt     # Azure SDK
+  - google-cloud   # GCP SDK
+  - fabric         # Remote execution
+  - paramiko       # SSH client
+
+npm_packages:
+  - name: "@githubnext/github-copilot-cli"
+    description: "AI pair programming in terminal"
+    optional: true
+
+aliases:
+  - "alias k='kubectl'"
+  - "alias tf='terraform'"
+  - "alias tfa='terraform apply'"
+  - "alias tfp='terraform plan'"
+  - "alias kctx='kubectx'"
+  - "alias kns='kubens'"
+  - "alias dcp='docker-compose'"

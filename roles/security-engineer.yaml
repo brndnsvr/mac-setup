@@ -1,0 +1,113 @@
+# Security Engineer Role
+name: "Security Engineer"
+description: "Security testing, vulnerability assessment, and defensive security"
+
+brew_formulae:
+  # Network Security
+  - name: nmap
+    description: "Network scanner"
+  - name: masscan
+    description: "Fast port scanner"
+    optional: true
+  - name: tcpdump
+    description: "Packet capture"
+  - name: arp-scan
+    description: "ARP scanner"
+  
+  # Vulnerability Scanning
+  - name: trivy
+    description: "Container scanner"
+  - name: grype
+    description: "Vulnerability scanner"
+  - name: gitleaks
+    description: "Secret scanner"
+  - name: trufflehog
+    description: "Find secrets"
+  
+  # SAST/Code Analysis
+  - name: semgrep
+    description: "Static analysis"
+  - name: tfsec
+    description: "Terraform security"
+  - name: checkov
+    description: "IaC scanner"
+  - name: bandit
+    description: "Python security"
+    optional: true
+  
+  # Cryptography
+  - name: gnupg
+    description: "GPG encryption"
+  - name: openssl
+    description: "Crypto toolkit"
+  - name: age
+    description: "Modern encryption"
+  - name: sops
+    description: "Secrets operator"
+  
+  # Web Security
+  - name: httpie
+    description: "HTTP client"
+  - name: nikto
+    description: "Web scanner"
+    optional: true
+  - name: gobuster
+    description: "Directory brute-forcer"
+    optional: true
+  
+  # Password Tools
+  - name: hashcat
+    description: "Password recovery"
+    optional: true
+  - name: john-jumbo
+    description: "John the Ripper"
+    optional: true
+
+brew_casks:
+  # Network Analysis
+  - name: wireshark
+    description: "Packet analyzer"
+  - name: burp-suite-community
+    description: "Web security testing"
+    optional: true
+  
+  # Security Tools
+  - name: 1password
+    description: "Password manager"
+  - name: gpg-suite
+    description: "GPG tools"
+  - name: yubico-authenticator
+    description: "YubiKey manager"
+  
+  # VPN
+  - name: tailscale
+    description: "Zero-config VPN"
+  
+  # Development
+  - name: visual-studio-code
+    description: "Code editor"
+
+pipx_packages:
+  - name: prowler
+    description: "Cloud security tool"
+    optional: true
+  - name: scoutsuite
+    description: "Cloud security auditing"
+    optional: true
+  - name: pacu
+    description: "AWS exploitation"
+    optional: true
+
+python_packages:
+  # Security Testing (virtual env)
+  - requests        # HTTP library
+  - cryptography    # Crypto library
+  - paramiko        # SSH client
+  - scapy           # Packet crafting
+  - impacket        # Network protocols
+  - pwntools        # CTF toolkit
+
+aliases:
+  - "alias nmap-quick='nmap -sV -sC -O -T4'"
+  - "alias scan-ports='nmap -p-'"
+  - "alias check-ssl='openssl s_client -connect'"

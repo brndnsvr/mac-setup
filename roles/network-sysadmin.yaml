@@ -1,0 +1,144 @@
+# Network/System Administrator Role
+name: "Network/System Administrator"
+description: "Network management, system administration, and infrastructure monitoring"
+
+brew_formulae:
+  # Network Analysis
+  - name: nmap
+    description: "Network discovery and security auditing"
+  - name: tcpdump
+    description: "Packet analyzer"
+  - name: wireshark
+    description: "Network protocol analyzer (CLI)"
+  - name: arp-scan
+    description: "ARP scanner"
+  - name: masscan
+    description: "Fast port scanner"
+    optional: true
+  
+  # Network Utilities
+  - name: mtr
+    description: "Network diagnostic tool"
+  - name: iperf3
+    description: "Network performance testing"
+  - name: netcat
+    description: "Network utility"
+  - name: socat
+    description: "Multipurpose relay"
+  - name: ipcalc
+    description: "IP subnet calculator"
+  - name: sipcalc
+    description: "Advanced IP calculator"
+  
+  # DNS Tools
+  - name: bind
+    description: "DNS tools (dig, nslookup)"
+  - name: dog
+    description: "Modern DNS client"
+  - name: dnsx
+    description: "Fast DNS toolkit"
+    optional: true
+  
+  # SSH & Remote Access
+  - name: openssh
+    description: "SSH client and utilities"
+  - name: mosh
+    description: "Mobile shell"
+  - name: autossh
+    description: "Persistent SSH tunnels"
+  - name: sshuttle
+    description: "SSH-based VPN"
+    optional: true
+  
+  # System Monitoring
+  - name: htop
+    description: "Process viewer"
+  - name: btop
+    description: "Resource monitor"
+  - name: iftop
+    description: "Network bandwidth monitor"
+  - name: iotop
+    description: "I/O monitor"
+  - name: bandwhich
+    description: "Terminal bandwidth utilization"
+  
+  # Configuration Management
+  - name: ansible
+    description: "IT automation"
+  - name: terraform
+    description: "Infrastructure as code"
+    optional: true
+  
+  # Cloud CLIs
+  - name: awscli
+    description: "AWS CLI"
+    optional: true
+  - name: azure-cli
+    description: "Azure CLI"
+    optional: true
+
+brew_casks:
+  # Network Analysis GUI
+  - name: wireshark
+    description: "Network protocol analyzer GUI"
+  - name: angry-ip-scanner
+    description: "IP/port scanner"
+    optional: true
+  
+  # VPN Clients
+  - name: tailscale
+    description: "Zero-config VPN"
+  - name: viscosity
+    description: "OpenVPN client"
+    optional: true
+  
+  # Remote Access
+  - name: royal-tsx
+    description: "Remote connection manager"
+    optional: true
+  - name: remote-desktop-manager
+    description: "Remote connections organizer"
+    optional: true
+  
+  # Terminal
+  - name: iterm2
+    description: "Advanced terminal"
+    alternatives:
+      - name: warp
+        description: "AI-powered terminal"
+  
+  # System Monitoring
+  - name: stats
+    description: "System monitor menu bar"
+  - name: istat-menus
+    description: "Advanced system monitoring"
+    optional: true
+    paid: true
+
+pipx_packages:
+  - name: ansible-lint
+    description: "Ansible playbook linter"
+  - name: netmiko
+    description: "Network device automation"
+    optional: true
+  - name: paramiko
+    description: "Python SSH library"
+    optional: true
+
+python_packages:
+  # Network automation (virtual env)
+  - netmiko         # Multi-vendor network devices
+  - napalm          # Network automation
+  - scapy           # Packet manipulation
+  - paramiko        # SSH2 protocol
+  - psutil          # System utilities
+  - fabric          # Remote execution
+
+aliases:
+  - "alias ports='lsof -iTCP -sTCP:LISTEN -n -P'"
+  - "alias myip='curl -s https://api.ipify.org'"
+  - "alias localip='ipconfig getifaddr en0'"
+  - "alias flushdns='dscacheutil -flushcache'"
+  - "alias pingg='ping 8.8.8.8'"
+  - "alias sshconfig='nvim ~/.ssh/config'"
+  - "alias netstat='netstat -an'"

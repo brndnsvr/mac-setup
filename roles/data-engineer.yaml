@@ -1,0 +1,126 @@
+# Data Engineer Role
+name: "Data Engineer"
+description: "Data pipelines, ETL, data warehousing, and analytics"
+
+brew_formulae:
+  # Languages
+  - name: python@3.13
+    description: "Primary data language"
+  - name: scala
+    description: "For Spark development"
+    optional: true
+  
+  # Python Tools
+  - name: pyenv
+    description: "Python version management"
+  - name: pipx
+    description: "Python CLI tools"
+  - name: poetry
+    description: "Dependency management"
+  
+  # Database Clients
+  - name: postgresql@16
+    description: "PostgreSQL client"
+  - name: mysql-client
+    description: "MySQL client"
+    optional: true
+  - name: redis
+    description: "Redis CLI"
+  - name: mongosh
+    description: "MongoDB shell"
+    optional: true
+  - name: duckdb
+    description: "In-process SQL OLAP"
+  
+  # CLI Tools
+  - name: pgcli
+    description: "Better PostgreSQL CLI"
+  - name: mycli
+    description: "Better MySQL CLI"
+    optional: true
+  - name: litecli
+    description: "Better SQLite CLI"
+  
+  # Data Processing
+  - name: jq
+    description: "JSON processor"
+  - name: yq
+    description: "YAML processor"
+  - name: csvkit
+    description: "CSV tools"
+  - name: miller
+    description: "CSV/JSON processor"
+  
+  # Cloud CLIs
+  - name: awscli
+    description: "AWS CLI"
+    optional: true
+  - name: google-cloud-sdk
+    description: "GCP CLI"
+    optional: true
+  - name: azure-cli
+    description: "Azure CLI"
+    optional: true
+
+brew_casks:
+  # Database Tools
+  - name: tableplus
+    description: "Database GUI"
+  - name: dbeaver-community
+    description: "Universal DB tool"
+    alternatives:
+      - name: datagrip
+        description: "JetBrains DB IDE"
+        paid: true
+  
+  # Development
+  - name: visual-studio-code
+    description: "Code editor"
+  - name: pycharm-ce
+    description: "Python IDE"
+    optional: true
+
+pipx_packages:
+  - name: dbt-core
+    description: "Data build tool"
+  - name: great-expectations
+    description: "Data validation"
+  - name: apache-airflow
+    description: "Workflow orchestration"
+    optional: true
+  - name: prefect
+    description: "Modern dataflow automation"
+    optional: true
+
+python_packages:
+  # Core Data Tools (virtual env)
+  - pandas          # Data manipulation
+  - numpy           # Numerical computing
+  - polars          # Fast dataframes
+  - duckdb          # Embedded OLAP
+  - pyarrow         # Columnar data
+  
+  # ETL & Pipelines
+  - sqlalchemy      # SQL toolkit
+  - alembic         # DB migrations
+  - pyspark         # Apache Spark
+  - kafka-python    # Kafka client
+  
+  # Cloud SDKs
+  - boto3           # AWS SDK
+  - google-cloud-bigquery
+  - azure-storage-blob
+  
+  # Data Quality
+  - pandera         # Data validation
+  - pydantic        # Data models
+  
+  # Visualization
+  - matplotlib      # Plotting
+  - plotly          # Interactive plots
+  - streamlit       # Data apps
+
+aliases:
+  - "alias dbt='dbt'
+  - "alias spark='pyspark'"
+  - "alias sqla='python -m sqlalchemy'"

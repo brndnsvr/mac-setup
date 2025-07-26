@@ -1,0 +1,118 @@
+# Core tools installed for all roles
+name: "Core Development Tools"
+description: "Essential tools needed by all developers"
+
+brew_formulae:
+  # Version Control
+  - name: git
+    description: "Distributed version control"
+  - name: gh
+    description: "GitHub CLI"
+  
+  # Core Utilities
+  - name: coreutils
+    description: "GNU core utilities"
+  - name: curl
+    description: "Transfer data with URLs"
+  - name: wget
+    description: "Internet file retriever"
+  - name: jq
+    description: "JSON processor"
+  - name: yq
+    description: "YAML processor"
+  
+  # Modern CLI Tools
+  - name: ripgrep
+    description: "Fast grep replacement"
+  - name: fd
+    description: "Fast find replacement"
+  - name: fzf
+    description: "Fuzzy finder"
+  - name: bat
+    description: "Better cat with syntax highlighting"
+  - name: eza
+    description: "Modern ls replacement"
+  - name: tree
+    description: "Directory listing"
+  
+  # Shell & Terminal
+  - name: zsh
+    description: "Z shell"
+  - name: starship
+    description: "Cross-shell prompt"
+  - name: tmux
+    description: "Terminal multiplexer"
+  
+  # Text Editors
+  - name: neovim
+    description: "Modern vim"
+  
+  # Development Essentials
+  - name: make
+    description: "Build automation"
+  - name: direnv
+    description: "Environment switcher"
+  - name: watchman
+    description: "File watching service"
+  
+  # Security Basics
+  - name: gnupg
+    description: "GNU Privacy Guard"
+  - name: openssh
+    description: "SSH connectivity"
+  - name: age
+    description: "Modern encryption"
+  
+  # System Monitoring
+  - name: htop
+    description: "Interactive process viewer"
+  - name: ncdu
+    description: "Disk usage analyzer"
+
+brew_casks:
+  # Essential GUI Apps
+  - name: visual-studio-code
+    description: "Primary code editor"
+    alternatives:
+      - name: cursor
+        description: "AI-powered VS Code fork"
+      - name: zed
+        description: "High-performance collaborative editor"
+  
+  - name: warp
+    description: "AI-powered terminal"
+    alternatives:
+      - name: iterm2
+        description: "Traditional powerful terminal"
+      - name: wezterm
+        description: "GPU-accelerated terminal"
+  
+  - name: raycast
+    description: "Productivity launcher"
+    alternatives:
+      - name: alfred
+        description: "Classic Mac launcher"
+  
+  - name: rectangle
+    description: "Window management"
+  
+  - name: 1password
+    description: "Password manager"
+    alternatives:
+      - name: bitwarden
+        description: "Open-source password manager"
+
+pipx_packages:
+  - name: pre-commit
+    description: "Git hook framework"
+  - name: httpie
+    description: "User-friendly HTTP client"
+  - name: tldr
+    description: "Simplified man pages"
+
+# These are installed but not configured
+optional_core:
+  - git-lfs       # Large file support
+  - ssh-copy-id   # SSH key distribution
+  - bc            # Calculator
+  - rsync         # File synchronization

@@ -111,6 +111,16 @@ DEVELOPER_TOOLS=(
     "hex-fiend"               # Hex editor
 )
 
+# AI & LLM Tools
+AI_TOOLS=(
+    "chatgpt"                 # Official ChatGPT desktop app
+    "diffusionbee"           # Stable Diffusion GUI
+    "jan"                    # Open-source ChatGPT alternative
+    "lm-studio"              # Run LLMs locally with GUI
+    "gpt4all"                # Run LLMs locally
+    "mochi-diffusion"        # Core ML Stable Diffusion
+)
+
 # Function to install apps
 install_apps() {
     local apps=("$@")
@@ -232,30 +242,46 @@ elif [[ $REPLY =~ ^[Pp]$ ]]; then
     pick_and_install_apps "additional developer tools" "${DEVELOPER_TOOLS[@]}"
 fi
 
-# Install fonts for development
-log_info "Installing developer fonts..."
-brew tap homebrew/cask-fonts || true
+# Ask for AI & LLM tools
+echo ""
+read -p "Install AI & LLM tools? (y/n/p) " -n 1 -r
+echo ""
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    install_apps "${AI_TOOLS[@]}"
+elif [[ $REPLY =~ ^[Pp]$ ]]; then
+    pick_and_install_apps "AI & LLM tools" "${AI_TOOLS[@]}"
+fi
 
-FONTS=(
-    "font-jetbrains-mono"
-    "font-jetbrains-mono-nerd-font"
-    "font-fira-code"
-    "font-fira-code-nerd-font"
-    "font-hack-nerd-font"
-    "font-meslo-lg-nerd-font"
-    "font-source-code-pro"
-    "font-cascadia-code"
-    "font-sf-mono"
-)
+# Ask about installing fonts
+echo ""
+read -p "Install developer fonts? (y/n) " -n 1 -r
+echo ""
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    # Install fonts for development
+    log_info "Installing developer fonts..."
+    # Note: Font casks are now in the main homebrew/cask tap, no separate tap needed
 
-for font in "${FONTS[@]}"; do
-    if brew list --cask "$font" &> /dev/null 2>&1; then
-        log_success "$font already installed"
-    else
-        log_info "Installing $font..."
-        brew install --cask "$font" || log_warning "Failed to install $font"
-    fi
-done
+    FONTS=(
+        "font-jetbrains-mono"
+        "font-jetbrains-mono-nerd-font"
+        "font-fira-code"
+        "font-fira-code-nerd-font"
+        "font-hack-nerd-font"
+        "font-meslo-lg-nerd-font"
+        "font-source-code-pro"
+        "font-cascadia-code"
+        "font-sf-mono"
+    )
+
+    for font in "${FONTS[@]}"; do
+        if brew list --cask "$font" &> /dev/null 2>&1; then
+            log_success "$font already installed"
+        else
+            log_info "Installing $font..."
+            brew install --cask "$font" || log_warning "Failed to install $font"
+        fi
+    done
+fi  # End of font installation conditional
 
 # Configure VS Code
 if command -v code &> /dev/null; then

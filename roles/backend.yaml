@@ -1,0 +1,144 @@
+# Backend Developer Role
+name: "Backend Developer"
+description: "APIs, microservices, databases, and server-side development"
+
+brew_formulae:
+  # Primary Languages (ask preferences)
+  - name: python@3.13
+    description: "Python programming language"
+  - name: go
+    description: "Go programming language"
+    optional: true
+  - name: rust
+    description: "Rust programming language"
+    optional: true
+  - name: java
+    description: "Java programming language"
+    optional: true
+  - name: node
+    description: "Node.js runtime"
+    optional: true
+  
+  # Language Tools
+  - name: pyenv
+    description: "Python version management"
+  - name: pipx
+    description: "Python CLI tools"
+  - name: uv
+    description: "Fast Python package manager"
+  - name: poetry
+    description: "Python dependency management"
+  
+  # Database Clients Only
+  - name: postgresql@16
+    description: "PostgreSQL client tools (psql)"
+  - name: mysql-client
+    description: "MySQL client tools"
+    optional: true
+  - name: redis
+    description: "Redis CLI client"
+  - name: sqlite
+    description: "SQLite CLI (embedded DB)"
+  - name: pgcli
+    description: "Better PostgreSQL CLI"
+  - name: mycli
+    description: "Better MySQL CLI"
+    optional: true
+  - name: mongosh
+    description: "MongoDB Shell"
+    optional: true
+  
+  # API Development
+  - name: httpie
+    description: "HTTP client"
+  - name: grpcurl
+    description: "gRPC client"
+  - name: protobuf
+    description: "Protocol buffers"
+    optional: true
+  
+  # Monitoring & Performance
+  - name: wrk
+    description: "HTTP benchmarking"
+    optional: true
+  - name: vegeta
+    description: "Load testing tool"
+    optional: true
+  
+  # Container Tools
+  - name: docker-compose
+    description: "Multi-container Docker apps"
+  - name: dive
+    description: "Docker image explorer"
+    optional: true
+
+brew_casks:
+  # Database Management
+  - name: tableplus
+    description: "Modern database GUI"
+  - name: redis-insight
+    description: "Redis GUI"
+    optional: true
+  
+  # API Testing
+  - name: postman
+    description: "API development platform"
+    alternatives:
+      - name: insomnia
+        description: "REST/GraphQL/gRPC client"
+  
+  # Containers
+  - name: orbstack
+    description: "Lightweight Docker runtime"
+  
+  # Message Queue UIs (optional)
+  - name: mqtt-explorer
+    description: "MQTT client"
+    optional: true
+
+pipx_packages:
+  - name: black
+    description: "Python formatter"
+  - name: ruff
+    description: "Fast Python linter"
+  - name: mypy
+    description: "Static type checker"
+  - name: pytest
+    description: "Testing framework"
+  - name: tox
+    description: "Test automation"
+    optional: true
+  - name: locust
+    description: "Load testing"
+    optional: true
+
+python_packages:
+  # Web Frameworks (virtual env)
+  - fastapi         # Modern async API
+  - django          # Full-featured framework
+  - flask           # Micro framework
+  - uvicorn         # ASGI server
+  - gunicorn        # WSGI server
+  - celery          # Task queue
+  - sqlalchemy      # ORM
+  - alembic         # Database migrations
+  - pydantic        # Data validation
+
+go_packages:
+  - github.com/gin-gonic/gin      # Web framework
+  - github.com/gorilla/mux        # HTTP router
+  - github.com/spf13/cobra        # CLI framework
+  - github.com/stretchr/testify   # Testing
+
+rust_crates:
+  - actix-web       # Web framework
+  - tokio           # Async runtime
+  - diesel          # ORM
+  - serde           # Serialization
+
+aliases:
+  - "alias py='python'"
+  - "alias pytest='python -m pytest'"
+  - "alias uvicorn='python -m uvicorn'"
+  - "alias dj='python manage.py'"
+  - "alias migrate='python manage.py migrate'"

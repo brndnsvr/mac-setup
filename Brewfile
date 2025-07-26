@@ -3,7 +3,7 @@
 
 # Taps
 tap "homebrew/cask"
-tap "homebrew/cask-fonts"
+# tap "homebrew/cask-fonts" # Deprecated - fonts are now in main cask tap
 tap "homebrew/services"
 tap "mongodb/brew"
 

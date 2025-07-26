@@ -1,0 +1,129 @@
+# Mobile Developer Role
+name: "Mobile Developer"
+description: "iOS, Android, and cross-platform mobile app development"
+
+brew_formulae:
+  # iOS Development
+  - name: xcodes
+    description: "Manage Xcode versions"
+  - name: cocoapods
+    description: "iOS dependency manager"
+  - name: carthage
+    description: "Decentralized dependency manager"
+    optional: true
+  - name: swiftlint
+    description: "Swift linter"
+  - name: swiftformat
+    description: "Swift formatter"
+  
+  # Android Development
+  - name: gradle
+    description: "Build automation"
+    optional: true
+  - name: kotlin
+    description: "Kotlin language"
+    optional: true
+  
+  # Cross-Platform
+  - name: node
+    description: "For React Native"
+  - name: watchman
+    description: "File watcher"
+  - name: flutter
+    description: "Flutter SDK"
+    optional: true
+  
+  # Tools
+  - name: scrcpy
+    description: "Android screen mirror"
+    optional: true
+  - name: adb-sync
+    description: "Android file sync"
+    optional: true
+  - name: bundletool
+    description: "Android App Bundles"
+    optional: true
+
+brew_casks:
+  # IDEs
+  - name: xcode
+    description: "iOS development"
+    mas: true  # Mac App Store
+  - name: android-studio
+    description: "Android development"
+    optional: true
+  
+  # Development Tools
+  - name: visual-studio-code
+    description: "Code editor"
+  - name: simulator
+    description: "iOS Simulator"
+  - name: react-native-debugger
+    description: "React Native debugging"
+    optional: true
+  
+  # Design Tools
+  - name: figma
+    description: "UI/UX design"
+  - name: sketch
+    description: "Design tool"
+    optional: true
+    paid: true
+  
+  # API Testing
+  - name: postman
+    description: "API testing"
+    alternatives:
+      - name: insomnia
+        description: "REST client"
+  
+  # Device Management
+  - name: imazing
+    description: "iOS device manager"
+    optional: true
+    paid: true
+  - name: android-file-transfer
+    description: "Android file transfer"
+    optional: true
+
+npm_packages:
+  # React Native
+  - name: react-native-cli
+    description: "React Native CLI"
+    optional: true
+  - name: expo-cli
+    description: "Expo framework"
+    optional: true
+  - name: eas-cli
+    description: "Expo build service"
+    optional: true
+  
+  # Tools
+  - name: typescript
+    description: "TypeScript support"
+  - name: prettier
+    description: "Code formatter"
+  - name: eslint
+    description: "JavaScript linter"
+
+pipx_packages:
+  - name: maestro
+    description: "Mobile UI testing"
+    optional: true
+
+mobile_frameworks:
+  # Ask preferences
+  - native_ios      # Swift/SwiftUI
+  - native_android  # Kotlin/Compose
+  - react_native    # JavaScript
+  - flutter         # Dart
+  - ionic           # Web technologies
+  - xamarin         # C#/.NET
+
+aliases:
+  - "alias pod='pod'"
+  - "alias rn='react-native'"
+  - "alias rnr='react-native run-ios'"
+  - "alias rna='react-native run-android'"
+  - "alias xc='open -a Xcode'"
+  - "alias sim='open -a Simulator'"
