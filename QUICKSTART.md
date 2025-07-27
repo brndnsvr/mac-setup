@@ -6,7 +6,7 @@ Welcome to the Mac Development Environment Setup! This guide will help you get s
 
 ```bash
 # Clone and run
-git clone <repository-url> mac-setup
+git clone git@github.com:brndnsvr/mac-setup.git
 cd mac-setup
 chmod +x *.sh
 ./setup.sh
