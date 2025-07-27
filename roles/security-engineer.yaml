@@ -1,6 +1,12 @@
 # Security Engineer Role
 name: "Security Engineer"
 description: "Security testing, vulnerability assessment, and defensive security"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["security", "pentesting", "vulnerability-assessment", "devsecops", "cryptography"]
+icon: "🔐"
 
 brew_formulae:
   # Network Security
@@ -111,3 +117,133 @@ aliases:
   - "alias nmap-quick='nmap -sV -sC -O -T4'"
   - "alias scan-ports='nmap -p-'"
   - "alias check-ssl='openssl s_client -connect'"
+
+role_indicators:
+  commands:
+    - nmap
+    - trivy
+    - gitleaks
+    - semgrep
+    - gpg
+  files:
+    - .semgrep.yml
+    - .trivyignore
+    - security-scan.sh
+    - Dockerfile
+  directories:
+    - security
+    - scans
+    - reports
+    - .gnupg
+
+dependencies:
+  system:
+    - xcode-select
+    - git
+  roles:
+    - base-developer
+
+post_install_notes: |
+  Security Engineer Setup Complete! 🔐
+  
+  Next steps:
+  1. Configure security tools:
+     - Set up GPG key: gpg --full-generate-key
+     - Configure git signing: git config --global commit.gpgsign true
+  
+  2. Set up vulnerability scanning:
+     - Test Trivy: trivy image alpine:latest
+     - Configure Semgrep: semgrep --config=auto .
+  
+  3. Network security setup:
+     - Test nmap: sudo nmap -sn 192.168.1.0/24
+     - Set up Wireshark permissions
+  
+  4. Secret management:
+     - Configure SOPS with age or GPG
+     - Set up 1Password CLI: op signin
+  
+  5. Cloud security (if applicable):
+     - Configure AWS security tools
+     - Set up cloud security scanning
+
+common_workflows:
+  vulnerability_scan: |
+    # Container scanning
+    trivy image myapp:latest
+    
+    # File system scanning
+    trivy fs --security-checks vuln,config .
+    
+    # IaC scanning
+    trivy config terraform/
+  
+  secret_scanning: |
+    # Scan for secrets
+    gitleaks detect --source . -v
+    
+    # Pre-commit hook
+    gitleaks protect --staged -v
+    
+    # TruffleHog scan
+    trufflehog git file://./
+  
+  code_analysis: |
+    # Semgrep security scan
+    semgrep --config=auto .
+    
+    # Python specific
+    bandit -r src/
+    
+    # Terraform security
+    tfsec terraform/
+    checkov -d terraform/
+  
+  network_scan: |
+    # Quick scan
+    sudo nmap -sV -sC -T4 target.com
+    
+    # Full port scan
+    sudo nmap -p- -T4 target.com
+    
+    # Vulnerability scan
+    nmap --script vuln target.com
+  
+  ssl_testing: |
+    # Check SSL/TLS
+    openssl s_client -connect example.com:443 -servername example.com
+    
+    # Test ciphers
+    nmap --script ssl-enum-ciphers -p 443 example.com
+  
+  incident_response: |
+    # Capture network traffic
+    sudo tcpdump -i en0 -w incident.pcap
+    
+    # Check running processes
+    ps aux | grep suspicious
+    lsof -i -P
+    
+    # Check file integrity
+    shasum -a 256 /usr/bin/* > baseline.txt
+
+health_checks:
+  commands:
+    - nmap --version
+    - trivy --version
+    - semgrep --version
+    - gpg --version
+  security_tools:
+    - "gitleaks version"
+    - "which tfsec"
+    - "which checkov"
+  permissions:
+    - "ls -la ~/.gnupg"
+    - "sudo -n true && echo 'Sudo access OK' || echo 'Sudo needed for some tools'"
+
+estimated_install_time: "15-25 minutes"
+disk_space_required: "3GB"
+related_roles:
+  - devops-engineer
+  - network-sysadmin
+  - backend

@@ -1,6 +1,12 @@
 # Data Engineer Role
 name: "Data Engineer"
 description: "Data pipelines, ETL, data warehousing, and analytics"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["data-engineering", "etl", "pipelines", "analytics", "sql", "python", "spark"]
+icon: "📊"
 
 brew_formulae:
   # Languages
@@ -121,6 +127,148 @@ python_packages:
   - streamlit       # Data apps
 
 aliases:
-  - "alias dbt='dbt'
+  - "alias dbt='dbt'"
   - "alias spark='pyspark'"
   - "alias sqla='python -m sqlalchemy'"
+  - "alias duck='duckdb'"
+  - "alias airflow='airflow'"
+
+role_indicators:
+  commands:
+    - dbt
+    - spark
+    - airflow
+    - psql
+    - duckdb
+  files:
+    - dbt_project.yml
+    - requirements.txt
+    - Dockerfile
+    - airflow.cfg
+  directories:
+    - dbt
+    - data
+    - pipelines
+    - models
+
+dependencies:
+  system:
+    - xcode-select
+    - git
+  roles:
+    - base-developer
+
+post_install_notes: |
+  Data Engineer Setup Complete! 📊
+  
+  Next steps:
+  1. Set up Python environment:
+     - python -m venv data-env
+     - source data-env/bin/activate
+     - pip install -r requirements.txt
+  
+  2. Configure database connections:
+     - Create ~/.dbt/profiles.yml for dbt
+     - Test connections: psql, duckdb, redis-cli
+  
+  3. Set up orchestration (choose one):
+     - Airflow: airflow db init && airflow webserver
+     - Prefect: prefect server start
+  
+  4. Configure cloud access:
+     - aws configure
+     - gcloud auth login
+     - az login
+  
+  5. Create your first pipeline:
+     - dbt init my_project
+     - cd my_project && dbt run
+
+common_workflows:
+  create_dbt_project: |
+    dbt init analytics_project
+    cd analytics_project
+    # Edit dbt_project.yml
+    dbt debug  # Test connection
+    dbt run    # Run models
+    dbt test   # Run tests
+  
+  etl_pipeline: |
+    # Basic ETL with pandas
+    import pandas as pd
+    from sqlalchemy import create_engine
+    
+    # Extract
+    df = pd.read_csv('data.csv')
+    
+    # Transform
+    df_cleaned = df.dropna().groupby('category').sum()
+    
+    # Load
+    engine = create_engine('postgresql://user:pass@localhost/db')
+    df_cleaned.to_sql('summary_table', engine, if_exists='replace')
+  
+  spark_job: |
+    # PySpark example
+    from pyspark.sql import SparkSession
+    
+    spark = SparkSession.builder \
+        .appName("DataPipeline") \
+        .getOrCreate()
+    
+    df = spark.read.parquet("s3://bucket/data/")
+    df.createOrReplaceTempView("data")
+    
+    result = spark.sql("""
+        SELECT category, SUM(amount) as total
+        FROM data
+        GROUP BY category
+    """)
+    
+    result.write.mode("overwrite").parquet("s3://bucket/output/")
+  
+  duckdb_analytics: |
+    # DuckDB for local analytics
+    import duckdb
+    
+    conn = duckdb.connect('analytics.db')
+    
+    # Query CSV directly
+    conn.execute("""
+        SELECT * FROM read_csv_auto('*.csv')
+        WHERE date >= '2024-01-01'
+    """).df()
+  
+  data_quality_check: |
+    # Using Great Expectations
+    import great_expectations as ge
+    
+    df = ge.read_csv("data.csv")
+    
+    # Add expectations
+    df.expect_column_values_to_not_be_null("id")
+    df.expect_column_values_to_be_between("age", 0, 120)
+    
+    # Validate
+    results = df.validate()
+
+health_checks:
+  commands:
+    - python --version
+    - dbt --version
+    - psql --version
+    - duckdb --version
+  services:
+    - "psql -U postgres -c 'SELECT 1' || echo 'PostgreSQL not accessible'"
+    - "redis-cli ping || echo 'Redis not running'"
+  python_imports:
+    - "python -c 'import pandas; print(pandas.__version__)'"
+    - "python -c 'import sqlalchemy; print(sqlalchemy.__version__)'"
+    - "python -c 'import duckdb; print(duckdb.__version__)'"
+
+estimated_install_time: "20-30 minutes"
+disk_space_required: "6GB"
+related_roles:
+  - backend
+  - ai-ml-engineer
+  - data-scientist

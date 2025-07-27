@@ -1,6 +1,12 @@
 # Full-Stack Developer Role
 name: "Full-Stack Developer"
 description: "Frontend, backend, databases, and deployment"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["web-development", "javascript", "python", "databases", "api", "frontend", "backend"]
+icon: "🚀"
 
 brew_formulae:
   # Languages & Runtimes
@@ -163,3 +169,101 @@ aliases:
   - "alias pip='pip3'"
   - "alias dcu='docker-compose up'"
   - "alias dcd='docker-compose down'"
+
+role_indicators:
+  commands:
+    - node
+    - npm
+    - python
+    - docker
+    - psql
+  files:
+    - package.json
+    - requirements.txt
+    - docker-compose.yml
+    - webpack.config.js
+    - tsconfig.json
+  directories:
+    - node_modules
+    - .git
+    - src
+    - public
+    - api
+
+dependencies:
+  system:
+    - xcode-select
+    - git
+  roles:
+    - base-developer
+
+post_install_notes: |
+  Full-Stack Developer Setup Complete! 🚀
+  
+  Next steps:
+  1. Configure your preferred frontend framework:
+     - React: npx create-react-app my-app
+     - Vue: npm create vue@latest
+     - Next.js: npx create-next-app@latest
+  
+  2. Set up Python virtual environment:
+     - python -m venv venv
+     - source venv/bin/activate
+     - pip install -r requirements.txt
+  
+  3. Start local databases with Docker:
+     - docker-compose up -d postgres redis
+  
+  4. Configure VS Code/Cursor extensions:
+     - Python, ESLint, Prettier, Docker
+  
+  5. Set up local HTTPS:
+     - mkcert -install
+     - mkcert localhost
+
+common_workflows:
+  create_react_app: |
+    npx create-react-app my-app --template typescript
+    cd my-app
+    npm start
+  
+  create_django_project: |
+    django-admin startproject myproject
+    cd myproject
+    python manage.py migrate
+    python manage.py runserver
+  
+  create_fastapi_app: |
+    mkdir my-api && cd my-api
+    python -m venv venv
+    source venv/bin/activate
+    pip install fastapi uvicorn
+    # Create main.py
+    uvicorn main:app --reload
+  
+  docker_postgres: |
+    docker run -d \
+      --name postgres \
+      -e POSTGRES_PASSWORD=postgres \
+      -p 5432:5432 \
+      postgres:16
+
+health_checks:
+  commands:
+    - node --version
+    - python --version
+    - docker --version
+    - psql --version
+  expected_files:
+    - ~/.nvm/nvm.sh
+    - ~/.pyenv/version
+  services:
+    - "docker ps"
+    - "curl localhost:3000"
+
+estimated_install_time: "25-35 minutes"
+disk_space_required: "8GB"
+related_roles:
+  - backend
+  - frontend
+  - devops-engineer

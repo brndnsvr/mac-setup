@@ -1,0 +1,109 @@
+# Startup Company Profile
+# Fast-moving development with modern tools
+
+name: "Startup Developer Profile"
+description: "Optimized for rapid development and deployment"
+version: "1.0"
+company: "Generic Startup"
+
+# Base configuration
+base_preset: "startup"
+additional_roles:
+  - ai-ml-engineer  # For AI features
+
+# Tool preferences
+tool_preferences:
+  terminal: "warp"         # Modern AI-powered terminal
+  editor: "cursor"         # AI-assisted coding
+  api_client: "bruno"      # Open-source API client
+  database_gui: "tableplus"
+  password_manager: "bitwarden"  # Open-source option
+
+# Additional tools
+additional_tools:
+  brew_formulae:
+    - name: direnv
+      description: "Environment variable management"
+    - name: gh
+      description: "GitHub CLI for PRs"
+    - name: act
+      description: "Run GitHub Actions locally"
+    - name: stripe
+      description: "Stripe CLI"
+      optional: true
+  
+  brew_casks:
+    - name: linear
+      description: "Issue tracking"
+    - name: slack
+      description: "Team communication"
+    - name: zoom
+      description: "Video calls"
+    - name: notion
+      description: "Documentation"
+  
+  npm_packages:
+    - name: vercel
+      description: "Deployment platform"
+    - name: netlify-cli
+      description: "Alternative deployment"
+
+# Environment configuration
+environment:
+  NODE_ENV: "development"
+  REACT_EDITOR: "cursor"
+
+# Git configuration
+git_config:
+  init.defaultBranch: "main"
+  pull.rebase: "true"
+  push.autoSetupRemote: "true"
+  
+# Shell aliases
+aliases:
+  - "alias gpr='gh pr create'"
+  - "alias gdeploy='git push && vercel'"
+  - "alias gclean='git branch --merged | grep -v main | xargs -n 1 git branch -d'"
+  
+# Custom functions
+functions:
+  quick_deploy: |
+    # Quick deploy to staging
+    quick-deploy() {
+      git add -A
+      git commit -m "$1"
+      git push
+      vercel --prod
+    }
+  
+  new_feature: |
+    # Create new feature branch
+    new-feature() {
+      git checkout -b feature/$1
+      git push -u origin feature/$1
+    }
+
+# VS Code extensions
+vscode_extensions:
+  - "dbaeumer.vscode-eslint"
+  - "esbenp.prettier-vscode"
+  - "prisma.prisma"
+  - "github.copilot"
+  - "github.copilot-chat"
+  
+# Security settings
+security:
+  require_2fa: true
+  commit_signing: false  # Optional for startups
+  
+# Performance settings
+performance:
+  install_mode: "standard"  # Not minimal, not full
+  parallel_install: true
+  
+# Post-install instructions
+post_install:
+  - "Set up Vercel CLI: vercel login"
+  - "Configure Linear app"
+  - "Join company Slack workspace"
+  - "Set up GitHub access with company org"

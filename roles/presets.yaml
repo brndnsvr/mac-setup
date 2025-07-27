@@ -1,0 +1,210 @@
+# Role Combination Presets
+# Common combinations of roles for typical use cases
+
+presets:
+  startup:
+    name: "Startup Developer"
+    description: "Full-stack development with basic DevOps for startup environments"
+    roles:
+      - fullstack
+      - devops
+    options:
+      mode: minimal
+      skip_optional: true
+    icon: "🚀"
+    
+  enterprise:
+    name: "Enterprise Developer"
+    description: "Backend development with security focus for enterprise environments"
+    roles:
+      - backend
+      - security-engineer
+    options:
+      include_testing: true
+      include_monitoring: true
+    icon: "🏢"
+    
+  modern-web:
+    name: "Modern Web Developer"
+    description: "Frontend development with AI integration for cutting-edge web apps"
+    roles:
+      - frontend
+      - ai-ml-engineer
+    options:
+      frameworks:
+        - react
+        - nextjs
+      include_design_tools: true
+    icon: "🌐"
+    
+  platform:
+    name: "Platform Engineer"
+    description: "DevOps with security for platform engineering"
+    roles:
+      - devops
+      - security-engineer
+      - network-sysadmin
+    options:
+      mode: full
+      cloud_providers:
+        - aws
+        - gcp
+        - azure
+    icon: "🏗️"
+    
+  data-scientist:
+    name: "Data Scientist"
+    description: "Data engineering with ML/AI capabilities"
+    roles:
+      - data-engineer
+      - ai-ml-engineer
+    options:
+      include_notebooks: true
+      include_visualization: true
+    icon: "📊"
+    
+  mobile-fullstack:
+    name: "Mobile Full-Stack Developer"
+    description: "Mobile development with backend capabilities"
+    roles:
+      - mobile-developer
+      - backend
+    options:
+      platforms:
+        - ios
+        - android
+      include_cross_platform: true
+    icon: "📱"
+    
+  devops-sre:
+    name: "DevOps/SRE"
+    description: "Full DevOps with monitoring and incident response"
+    roles:
+      - devops
+      - network-sysadmin
+      - security-engineer
+    options:
+      mode: full
+      include_monitoring: true
+      include_logging: true
+    icon: "🔧"
+    
+  web3-developer:
+    name: "Web3 Developer"
+    description: "Blockchain development with full-stack capabilities"
+    roles:
+      - blockchain-developer
+      - fullstack
+    options:
+      include_defi_tools: true
+      include_testing: true
+    icon: "⛓️"
+    
+  indie-hacker:
+    name: "Indie Hacker"
+    description: "Solo developer with full-stack and basic DevOps"
+    roles:
+      - fullstack
+      - devops
+    options:
+      mode: minimal
+      include_marketing_tools: true
+      include_analytics: true
+    icon: "🎯"
+    
+  cloud-architect:
+    name: "Cloud Architect"
+    description: "Cloud-focused with infrastructure and security"
+    roles:
+      - devops
+      - backend
+      - security-engineer
+    options:
+      cloud_providers: all
+      include_cost_tools: true
+      include_compliance: true
+    icon: "☁️"
+    
+  ml-engineer:
+    name: "ML Engineer"
+    description: "Production ML with backend and DevOps capabilities"
+    roles:
+      - ai-ml-engineer
+      - backend
+      - devops
+    options:
+      include_mlops: true
+      include_experiment_tracking: true
+    icon: "🤖"
+    
+  game-fullstack:
+    name: "Game Developer Full-Stack"
+    description: "Game development with backend services"
+    roles:
+      - game-developer
+      - backend
+    options:
+      engines:
+        - unity
+        - unreal
+      include_multiplayer: true
+    icon: "🎮"
+    
+  tech-lead:
+    name: "Technical Lead"
+    description: "Full-stack with DevOps and security awareness"
+    roles:
+      - fullstack
+      - devops
+      - security-engineer
+    options:
+      mode: full
+      include_code_review: true
+      include_documentation: true
+    icon: "👨‍💼"
+    
+  consultant:
+    name: "Technical Consultant"
+    description: "Versatile setup for consulting across technologies"
+    roles:
+      - fullstack
+      - devops
+      - data-engineer
+    options:
+      include_presentation: true
+      include_documentation: true
+    icon: "💼"
+    
+  student:
+    name: "Computer Science Student"
+    description: "Learning-focused setup with multiple languages"
+    roles:
+      - fullstack
+    options:
+      mode: minimal
+      include_learning_resources: true
+      languages:
+        - python
+        - java
+        - javascript
+        - c
+    icon: "🎓"
+
+# Quick selection guide
+quick_guide:
+  by_company_size:
+    startup: ["startup", "indie-hacker"]
+    medium: ["modern-web", "platform"]
+    enterprise: ["enterprise", "cloud-architect"]
+    
+  by_experience:
+    beginner: ["student", "fullstack"]
+    intermediate: ["startup", "modern-web"]
+    advanced: ["platform", "tech-lead"]
+    
+  by_focus:
+    web: ["modern-web", "fullstack", "startup"]
+    mobile: ["mobile-fullstack", "mobile-developer"]
+    infrastructure: ["platform", "devops-sre", "cloud-architect"]
+    data: ["data-scientist", "ml-engineer"]
+    security: ["enterprise", "platform"]

@@ -1,0 +1,124 @@
+# Enterprise Company Profile
+# Security-focused with compliance requirements
+
+name: "Enterprise Developer Profile"
+description: "Secure development environment with compliance tools"
+version: "1.0"
+company: "Generic Enterprise Corp"
+
+# Base configuration
+base_preset: "enterprise"
+additional_roles:
+  - security-engineer
+
+# Tool preferences
+tool_preferences:
+  terminal: "iterm2"           # Traditional, scriptable
+  editor: "visual-studio-code" # Standard VS Code
+  api_client: "postman"        # Enterprise features
+  database_gui: "datagrip"     # JetBrains professional
+  password_manager: "1password" # Enterprise grade
+
+# Additional tools
+additional_tools:
+  brew_formulae:
+    - name: vault
+      description: "HashiCorp Vault for secrets"
+    - name: sonarqube-scanner
+      description: "Code quality scanning"
+    - name: dependency-check
+      description: "OWASP dependency checker"
+  
+  brew_casks:
+    - name: microsoft-teams
+      description: "Corporate communication"
+    - name: docker-desktop
+      description: "Container platform"
+      notes: "Requires license"
+    - name: viscosity
+      description: "Corporate VPN client"
+    - name: vmware-fusion
+      description: "VM for legacy systems"
+      optional: true
+  
+  python_packages:
+    - name: bandit
+      description: "Security linter for Python"
+    - name: safety
+      description: "Check dependencies for vulnerabilities"
+
+# Environment configuration
+environment:
+  CORPORATE_PROXY: "http://proxy.company.com:8080"
+  NO_PROXY: "localhost,127.0.0.1,*.company.com"
+  NODE_EXTRA_CA_CERTS: "/usr/local/share/ca-certificates/company-ca.crt"
+
+# Git configuration
+git_config:
+  user.email: "${USER}@company.com"
+  commit.gpgsign: "true"
+  tag.gpgsign: "true"
+  http.sslVerify: "true"
+  http.proxy: "http://proxy.company.com:8080"
+
+# Security policies
+security:
+  require_2fa: true
+  commit_signing: true
+  enforce_ssh_keys: true
+  password_rotation: 90  # days
+  require_full_disk_encryption: true
+  
+  blocked_tools:
+    - "ngrok"  # No tunneling
+    - "localtunnel"
+    - "cloudflared"
+  
+  required_tools:
+    - "1password-cli"
+    - "yubikey-manager"
+
+# Compliance settings
+compliance:
+  standards:
+    - "SOC2"
+    - "ISO27001"
+    - "GDPR"
+  
+  audit_logging: true
+  data_classification: true
+
+# Shell configuration
+aliases:
+  - "alias gcorp='git config user.email ${USER}@company.com'"
+  - "alias vpn='viscosity connect Corporate'"
+  - "alias sec-scan='sonar-scanner && dependency-check'"
+
+# VS Code extensions
+vscode_extensions:
+  - "ms-vscode.cpptools"
+  - "sonarSource.sonarlint-vscode"
+  - "ms-vscode-remote.remote-ssh"
+  - "redhat.vscode-yaml"
+  - "hashicorp.terraform"
+  
+# Network configuration
+network:
+  proxy:
+    http: "http://proxy.company.com:8080"
+    https: "http://proxy.company.com:8080"
+    no_proxy: "localhost,127.0.0.1,*.company.com"
+  
+  vpn:
+    required: true
+    client: "viscosity"
+    config_url: "https://it.company.com/vpn-config"
+
+# Post-install instructions
+post_install:
+  - "Install corporate CA certificate"
+  - "Configure VPN with IT-provided settings"
+  - "Enable FileVault disk encryption"
+  - "Register device with IT asset management"
+  - "Complete security training"
+  - "Set up YubiKey for Git signing"

@@ -1,0 +1,159 @@
+# Blockchain Developer
+# Tools for Web3, DeFi, and blockchain development
+
+name: "Blockchain Developer"
+description: "Blockchain clients, Web3 libraries, smart contract tools"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["blockchain", "web3", "ethereum", "solidity", "defi", "smart-contracts", "crypto"]
+icon: "⛓️"
+
+brew_formulae:
+  # Core Languages
+  - name: node
+    description: "JavaScript runtime for Web3"
+  - name: python@3.13
+    description: "Python for blockchain scripts"
+  - name: rust
+    description: "For Solana/Substrate development"
+    optional: true
+  - name: go
+    description: "For Go-Ethereum and blockchain tools"
+    optional: true
+  
+  # Blockchain Clients
+  - name: ethereum
+    description: "Go Ethereum client"
+    optional: true
+  - name: bitcoin
+    description: "Bitcoin Core client"
+    optional: true
+  
+  # Development Tools
+  - name: solidity
+    description: "Ethereum smart contract language"
+  - name: ipfs
+    description: "InterPlanetary File System"
+    optional: true
+  - name: protobuf
+    description: "Protocol buffers for blockchain"
+  
+  # Security Tools
+  - name: gnupg
+    description: "GPG for signing transactions"
+
+brew_casks:
+  # Wallets & Clients
+  - name: metamask
+    description: "Ethereum wallet browser extension"
+    note: "Install as browser extension"
+  
+  # Development Tools
+  - name: ganache
+    description: "Personal blockchain for Ethereum"
+  - name: visual-studio-code
+    description: "Code editor with Solidity support"
+    alternatives:
+      - name: cursor
+        description: "AI-powered editor"
+  
+  # Security
+  - name: 1password
+    description: "Password manager for seed phrases"
+    alternatives:
+      - name: bitwarden
+        description: "Open-source password manager"
+
+npm_packages:
+  # Development Frameworks
+  - name: truffle
+    description: "Ethereum development framework"
+  - name: hardhat
+    description: "Ethereum development environment"
+    alternatives:
+      - name: foundry
+        description: "Fast Ethereum toolkit in Rust"
+  
+  # Web3 Libraries
+  - name: web3
+    description: "Ethereum JavaScript API"
+  - name: ethers
+    description: "Complete Ethereum library"
+  
+  # Testing & Security
+  - name: ganache-cli
+    description: "Command-line Ganache"
+  - name: @openzeppelin/contracts
+    description: "Secure smart contract library"
+    optional: true
+  
+  # Tools
+  - name: create-eth-app
+    description: "Ethereum app generator"
+    optional: true
+
+python_packages:
+  - name: web3py
+    description: "Python Web3 library"
+  - name: eth-brownie
+    description: "Python smart contract framework"
+    optional: true
+  - name: vyper
+    description: "Pythonic smart contract language"
+    optional: true
+  - name: mythril
+    description: "Smart contract security analyzer"
+    optional: true
+
+role_indicators:
+  - ethereum
+  - solidity
+  - truffle
+  - hardhat
+  - ganache
+  - web3
+  - metamask
+
+post_install_notes:
+  - "Set up MetaMask browser extension for wallet management"
+  - "Configure Infura or Alchemy API keys for mainnet access"
+  - "Join blockchain developer communities for support"
+  - "Practice on testnets before deploying to mainnet"
+  - "Always audit smart contracts before deployment"
+
+common_workflows:
+  new_hardhat_project: |
+    # Create new Hardhat project
+    mkdir my-dapp && cd my-dapp
+    npm init -y
+    npm install --save-dev hardhat
+    npx hardhat
+    # Select "Create a JavaScript project"
+    
+  new_truffle_project: |
+    # Create new Truffle project
+    mkdir my-dapp && cd my-dapp
+    truffle init
+    
+  deploy_to_testnet: |
+    # Deploy to Ethereum testnet
+    # 1. Get testnet ETH from faucet
+    # 2. Configure network in hardhat.config.js
+    # 3. Run deployment
+    npx hardhat run scripts/deploy.js --network goerli
+    
+  security_check: |
+    # Run security analysis
+    mythril analyze contracts/MyContract.sol
+    # Or use Slither
+    pip install slither-analyzer
+    slither .
+
+recommended_resources:
+  - "Ethereum.org developer docs"
+  - "OpenZeppelin documentation"
+  - "Chainlink documentation for oracles"
+  - "Ethernaut for security practice"
+  - "SpeedRunEthereum for hands-on learning"

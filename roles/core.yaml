@@ -1,6 +1,15 @@
 # Core tools installed for all roles
 name: "Core Development Tools"
 description: "Essential tools needed by all developers"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags:
+  - essential
+  - baseline
+  - required
+icon: "🛠️"
 
 brew_formulae:
   # Version Control
@@ -116,3 +125,55 @@ optional_core:
   - ssh-copy-id   # SSH key distribution
   - bc            # Calculator
   - rsync         # File synchronization
+
+# Role metadata
+role_indicators:
+  - git
+  - neovim
+  - tmux
+  - fzf
+  - ripgrep
+
+dependencies:
+  system:
+    - xcode-select  # Command Line Tools
+    - homebrew      # Package manager
+  
+post_install_notes:
+  - "Restart your terminal after installation"
+  - "Run 'gh auth login' to authenticate with GitHub"
+  - "Configure Git with your name and email"
+  - "Set up SSH keys for Git operations"
+
+common_workflows:
+  setup_git: |
+    # Configure Git globally
+    git config --global user.name "Your Name"
+    git config --global user.email "your.email@example.com"
+    git config --global init.defaultBranch main
+    
+  setup_ssh: |
+    # Generate SSH key
+    ssh-keygen -t ed25519 -C "your.email@example.com"
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ed25519
+    
+  customize_shell: |
+    # Edit shell configuration
+    nvim ~/.zshrc
+    # Or edit custom configs
+    nvim ~/.zsh/aliases.zsh
+    nvim ~/.zsh/functions.zsh
+
+health_checks:
+  - command: git --version
+    expected: "git version"
+  - command: gh --version
+    expected: "gh version"
+  - command: brew --version
+    expected: "Homebrew"
+  - command: nvim --version
+    expected: "NVIM"
+
+estimated_install_time: "10-15 minutes"
+disk_space_required: "500 MB"

@@ -1,6 +1,12 @@
 # AI/ML Engineer Role
 name: "AI/ML Engineer"
 description: "Machine learning, deep learning, LLMs, and AI application development"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["ai", "machine-learning", "deep-learning", "llm", "data-science", "python"]
+icon: "🤖"
 
 brew_formulae:
   # Languages
@@ -147,3 +153,122 @@ aliases:
   - "alias ipy='ipython'"
   - "alias llama='ollama run llama3.2'"
   - "alias codellm='ollama run codellama'"
+
+role_indicators:
+  commands:
+    - python
+    - jupyter
+    - ollama
+    - pip
+  files:
+    - requirements.txt
+    - .ipynb
+    - model.pkl
+    - config.yaml
+  directories:
+    - notebooks
+    - models
+    - data
+    - .ipynb_checkpoints
+
+dependencies:
+  system:
+    - xcode-select
+    - git
+  roles:
+    - base-developer
+
+post_install_notes: |
+  AI/ML Engineer Setup Complete! 🤖
+  
+  Next steps:
+  1. Configure Python environment:
+     - pyenv install 3.13.0
+     - pyenv global 3.13.0
+     - python -m venv ml-env
+     - source ml-env/bin/activate
+  
+  2. Set up Jupyter:
+     - jupyter lab
+     - Install extensions: jupyterlab-lsp, jupyterlab-git
+  
+  3. Download local LLMs:
+     - ollama pull llama3.2
+     - ollama pull codellama
+     - ollama pull mistral
+  
+  4. Configure API keys (in ~/.zshrc or .env):
+     - export OPENAI_API_KEY="your-key"
+     - export ANTHROPIC_API_KEY="your-key"
+  
+  5. Test GPU acceleration:
+     - python -c "import torch; print(torch.backends.mps.is_available())"
+
+common_workflows:
+  create_ml_project: |
+    mkdir ml-project && cd ml-project
+    python -m venv venv
+    source venv/bin/activate
+    pip install numpy pandas scikit-learn matplotlib jupyter
+    jupyter lab
+  
+  llm_chat_app: |
+    # Basic LangChain app
+    pip install langchain langchain-community openai chromadb
+    # Create app.py with LangChain code
+    python app.py
+  
+  local_llm_setup: |
+    # Start Ollama
+    ollama serve
+    
+    # Pull models
+    ollama pull llama3.2
+    ollama pull mistral
+    
+    # Test
+    ollama run llama3.2 "Hello, how are you?"
+  
+  train_model: |
+    # PyTorch example
+    import torch
+    import torch.nn as nn
+    
+    # Check MPS (Apple Silicon GPU)
+    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    model = model.to(device)
+  
+  vector_db_setup: |
+    # ChromaDB example
+    import chromadb
+    client = chromadb.Client()
+    collection = client.create_collection("my_collection")
+    
+    # Add documents
+    collection.add(
+        documents=["This is a document"],
+        metadatas=[{"source": "my_source"}],
+        ids=["id1"]
+    )
+
+health_checks:
+  commands:
+    - python --version
+    - pip --version
+    - jupyter --version
+    - ollama --version
+  python_imports:
+    - "python -c 'import numpy; print(numpy.__version__)'"
+    - "python -c 'import torch; print(torch.__version__)'"
+    - "python -c 'import langchain; print(langchain.__version__)'"
+  gpu:
+    - "python -c 'import torch; print(f\"MPS available: {torch.backends.mps.is_available()}\")'"
+  services:
+    - "curl -f http://localhost:11434/api/tags || echo 'Ollama not running'"
+
+estimated_install_time: "30-45 minutes"
+disk_space_required: "15GB+"
+related_roles:
+  - data-scientist
+  - data-engineer
+  - backend

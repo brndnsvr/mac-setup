@@ -1,0 +1,264 @@
+# Technical Writer
+# Tools for documentation, API docs, tutorials, and technical content
+
+name: "Technical Writer"
+description: "Documentation tools, markdown editors, static site generators, diagram tools"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["documentation", "technical-writing", "markdown", "api-docs", "tutorials", "content"]
+icon: "📝"
+
+brew_formulae:
+  # Core Tools
+  - name: pandoc
+    description: "Universal document converter"
+  - name: vale
+    description: "Prose linter for technical writing"
+  - name: markdownlint-cli
+    description: "Markdown style checker"
+  
+  # Static Site Generators
+  - name: hugo
+    description: "Fast static site generator"
+    alternatives:
+      - name: mkdocs
+        description: "Python documentation generator"
+  - name: jekyll
+    description: "GitHub Pages compatible SSG"
+    optional: true
+  
+  # Version Control
+  - name: git
+    description: "Version control for docs"
+  - name: gh
+    description: "GitHub CLI for PRs"
+  
+  # Image Tools
+  - name: imagemagick
+    description: "Image manipulation"
+  - name: pngquant
+    description: "PNG compression"
+    optional: true
+  - name: jpegoptim
+    description: "JPEG optimization"
+    optional: true
+  
+  # API Documentation
+  - name: httpie
+    description: "HTTP client for API examples"
+  - name: jq
+    description: "JSON processor for examples"
+  - name: yq
+    description: "YAML processor"
+  
+  # Diagram Tools
+  - name: graphviz
+    description: "Graph visualization"
+  - name: plantuml
+    description: "UML diagram generator"
+    optional: true
+
+brew_casks:
+  # Writing Tools
+  - name: obsidian
+    description: "Knowledge base and note-taking"
+    alternatives:
+      - name: notion
+        description: "All-in-one workspace"
+      - name: typora
+        description: "Minimal markdown editor"
+        paid: true
+  - name: marked
+    description: "Markdown preview app"
+    optional: true
+  
+  # Code Editors
+  - name: visual-studio-code
+    description: "Editor with markdown preview"
+    alternatives:
+      - name: zed
+        description: "Fast modern editor"
+  - name: macdown
+    description: "Open source markdown editor"
+    optional: true
+  
+  # Diagram & Design
+  - name: draw-io
+    description: "Diagram creation tool"
+  - name: omnigraffle
+    description: "Professional diagramming"
+    optional: true
+    paid: true
+  - name: monodraw
+    description: "ASCII art diagrams"
+    optional: true
+  
+  # Screenshot Tools
+  - name: cleanshot
+    description: "Screenshot with annotations"
+    paid: true
+    alternatives:
+      - name: kap
+        description: "Screen recording"
+  
+  # API Documentation
+  - name: postman
+    description: "API documentation platform"
+    alternatives:
+      - name: insomnia
+        description: "REST API documentation"
+  - name: dash
+    description: "API documentation browser"
+    optional: true
+    paid: true
+  
+  # Grammar & Style
+  - name: grammarly-desktop
+    description: "Grammar and style checker"
+    optional: true
+  - name: hemingway-editor
+    description: "Clarity and readability"
+    optional: true
+  
+  # Publishing
+  - name: calibre
+    description: "E-book management"
+    optional: true
+  - name: kindle-previewer
+    description: "Kindle book preview"
+    optional: true
+
+npm_packages:
+  # Documentation Tools
+  - name: gitbook-cli
+    description: "GitBook documentation"
+    optional: true
+  - name: docsify-cli
+    description: "Documentation site generator"
+  - name: swagger-cli
+    description: "OpenAPI documentation"
+    optional: true
+  
+  # Static Site Tools
+  - name: @11ty/eleventy
+    description: "Simple static site generator"
+    optional: true
+  - name: vuepress
+    description: "Vue-powered SSG"
+    optional: true
+  
+  # Utilities
+  - name: markdown-pdf
+    description: "Convert markdown to PDF"
+  - name: markdownlint-cli
+    description: "Markdown linter"
+  - name: remark-cli
+    description: "Markdown processor"
+    optional: true
+
+python_packages:
+  # Documentation Generators
+  - name: mkdocs
+    description: "Project documentation"
+  - name: mkdocs-material
+    description: "Material theme for MkDocs"
+  - name: sphinx
+    description: "Python documentation generator"
+    optional: true
+  
+  # API Documentation
+  - name: pydoc-markdown
+    description: "Python API docs"
+    optional: true
+  
+  # Writing Tools
+  - name: proselint
+    description: "Prose linter"
+  - name: write-good
+    description: "Writing style linter"
+    optional: true
+
+role_indicators:
+  - obsidian
+  - notion
+  - typora
+  - mkdocs
+  - hugo
+  - vale
+  - pandoc
+  - draw-io
+
+post_install_notes:
+  - "Set up your preferred markdown editor with live preview"
+  - "Configure Vale with style guides for consistent writing"
+  - "Install VS Code extensions: Markdown All in One, markdownlint"
+  - "Set up Git for version controlling documentation"
+  - "Create documentation templates for consistency"
+
+common_workflows:
+  new_mkdocs_site: |
+    # Create MkDocs documentation site
+    mkdocs new my-docs
+    cd my-docs
+    pip install mkdocs-material
+    
+    # Update mkdocs.yml
+    cat > mkdocs.yml << EOF
+    site_name: My Documentation
+    theme:
+      name: material
+      palette:
+        primary: indigo
+    nav:
+      - Home: index.md
+      - Getting Started: getting-started.md
+      - API Reference: api-reference.md
+    EOF
+    
+    mkdocs serve  # Preview at http://localhost:8000
+    
+  new_hugo_site: |
+    # Create Hugo documentation site
+    hugo new site my-docs
+    cd my-docs
+    git init
+    git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke themes/ananke
+    echo "theme = 'ananke'" >> hugo.toml
+    hugo new posts/welcome.md
+    hugo server -D
+    
+  create_api_docs: |
+    # Generate API documentation from OpenAPI spec
+    # Using Redoc
+    npx @redocly/cli preview-docs openapi.yaml
+    
+    # Or using Swagger UI
+    docker run -p 80:8080 \
+      -e SWAGGER_JSON=/api/openapi.yaml \
+      -v $(pwd):/api \
+      swaggerapi/swagger-ui
+    
+  convert_formats: |
+    # Convert between document formats
+    # Markdown to PDF
+    pandoc README.md -o README.pdf
+    
+    # Markdown to HTML
+    pandoc README.md -o README.html --standalone
+    
+    # Markdown to Word
+    pandoc README.md -o README.docx
+    
+  lint_markdown: |
+    # Check markdown quality
+    markdownlint **/*.md
+    vale **/*.md
+
+documentation_templates:
+  - "README template"
+  - "API endpoint documentation"
+  - "Tutorial template"
+  - "Troubleshooting guide"
+  - "Release notes template"

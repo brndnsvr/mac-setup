@@ -1,6 +1,12 @@
 # Network/System Administrator Role
 name: "Network/System Administrator"
 description: "Network management, system administration, and infrastructure monitoring"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["networking", "sysadmin", "infrastructure", "monitoring", "security", "automation"]
+icon: "🌐"
 
 brew_formulae:
   # Network Analysis
@@ -142,3 +148,132 @@ aliases:
   - "alias pingg='ping 8.8.8.8'"
   - "alias sshconfig='nvim ~/.ssh/config'"
   - "alias netstat='netstat -an'"
+
+role_indicators:
+  commands:
+    - nmap
+    - dig
+    - ssh
+    - ansible
+    - tcpdump
+  files:
+    - ~/.ssh/config
+    - /etc/hosts
+    - ansible.cfg
+    - terraform.tf
+  directories:
+    - ~/.ssh
+    - ~/.ansible
+    - /etc/ansible
+
+dependencies:
+  system:
+    - xcode-select
+    - git
+  roles:
+    - base-developer
+
+post_install_notes: |
+  Network/System Administrator Setup Complete! 🌐
+  
+  Next steps:
+  1. Configure SSH keys and config:
+     - ssh-keygen -t ed25519 -C "your-email@example.com"
+     - Configure ~/.ssh/config for common hosts
+  
+  2. Set up Ansible:
+     - Create ansible.cfg in your project
+     - Set up inventory files
+     - Test: ansible all -m ping
+  
+  3. Network monitoring setup:
+     - Test Wireshark: sudo wireshark
+     - Configure network interfaces permissions
+     - Set up Tailscale VPN if needed
+  
+  4. System monitoring:
+     - Launch btop for system overview
+     - Configure Stats app in menu bar
+  
+  5. Cloud access (if applicable):
+     - aws configure
+     - az login
+
+common_workflows:
+  network_scan: |
+    # Quick network scan
+    sudo nmap -sn 192.168.1.0/24
+    
+    # Detailed host scan
+    sudo nmap -A -T4 target-host
+    
+    # Port scan
+    sudo nmap -p 1-65535 target-host
+  
+  ssh_tunnel: |
+    # Local port forwarding
+    ssh -L 8080:localhost:80 user@remote-host
+    
+    # Dynamic SOCKS proxy
+    ssh -D 9090 user@remote-host
+    
+    # Persistent tunnel
+    autossh -M 0 -f -N -L 8080:localhost:80 user@remote-host
+  
+  ansible_playbook: |
+    # Run playbook
+    ansible-playbook -i inventory site.yml
+    
+    # Check syntax
+    ansible-playbook --syntax-check site.yml
+    
+    # Dry run
+    ansible-playbook -i inventory site.yml --check
+  
+  network_monitoring: |
+    # Bandwidth by connection
+    sudo iftop
+    
+    # Bandwidth by process
+    sudo bandwhich
+    
+    # Packet capture
+    sudo tcpdump -i en0 -w capture.pcap
+    
+    # Live packet analysis
+    sudo tcpdump -i en0 -n host 192.168.1.1
+  
+  dns_troubleshooting: |
+    # DNS lookup
+    dig example.com
+    
+    # Trace DNS path
+    dig +trace example.com
+    
+    # Reverse lookup
+    dig -x 8.8.8.8
+    
+    # Modern DNS client
+    dog example.com
+
+health_checks:
+  commands:
+    - nmap --version
+    - ansible --version
+    - ssh -V
+    - dig -v
+  network:
+    - "ping -c 1 8.8.8.8"
+    - "curl -s https://api.ipify.org"
+  services:
+    - "lsof -iTCP -sTCP:LISTEN | grep -E '(ssh|http)'"
+  permissions:
+    - "ls -la ~/.ssh/config"
+    - "sudo -n true && echo 'Sudo access OK' || echo 'Sudo access needed'"
+
+estimated_install_time: "15-20 minutes"
+disk_space_required: "2GB"
+related_roles:
+  - devops-engineer
+  - security-engineer
+  - cloud-engineer

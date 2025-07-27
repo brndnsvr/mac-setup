@@ -25,12 +25,15 @@ Commands:
     list-npm        List global npm packages
     list-pip        List pipx packages
     list-go         List Go tools
+    list-role       List packages for a specific role
     remove          Interactive removal of packages
     remove-brew     Remove a Homebrew package
     remove-cask     Remove a Homebrew cask application
     remove-npm      Remove a global npm package
     remove-pip      Remove a pipx package
+    remove-role     Remove all packages for a specific role
     export          Export all installed packages to a file
+    export-role     Export packages for a specific role
     help            Show this help message
 
 Examples:
@@ -269,6 +272,191 @@ export_packages() {
     fi
 }
 
+# Role configuration
+ROLES_DIR="$SCRIPT_DIR/roles"
+
+# Parse YAML array (simple version)
+parse_yaml_array() {
+    local file=$1
+    local section=$2
+    local in_section=false
+    
+    while IFS= read -r line; do
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "${line// }" ]] && continue
+        
+        if [[ "$line" =~ ^${section}: ]]; then
+            in_section=true
+            continue
+        fi
+        
+        if [[ "$line" =~ ^[^[:space:]] ]] && [ "$in_section" = true ]; then
+            break
+        fi
+        
+        if [ "$in_section" = true ]; then
+            if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*name:[[:space:]]*(.+) ]]; then
+                echo "${BASH_REMATCH[1]}"
+            fi
+        fi
+    done < "$file"
+}
+
+# List packages for a role
+list_role_packages() {
+    local role="${1:-}"
+    
+    if [[ -z "$role" ]]; then
+        log_error "Role name required"
+        echo "Available roles:"
+        ls -1 "$ROLES_DIR"/*.yaml 2>/dev/null | xargs -n1 basename | sed 's/.yaml//' | sed 's/^/  - /'
+        return 1
+    fi
+    
+    local role_file="$ROLES_DIR/${role}.yaml"
+    
+    if [[ ! -f "$role_file" ]]; then
+        log_error "Role not found: $role"
+        return 1
+    fi
+    
+    log_info "Packages for role: $role"
+    echo ""
+    
+    # Get formulae
+    local formulae=($(parse_yaml_array "$role_file" "brew_formulae"))
+    if [[ ${#formulae[@]} -gt 0 ]]; then
+        echo "Homebrew Formulae:"
+        for formula in "${formulae[@]}"; do
+            echo "  - $formula"
+        done
+        echo ""
+    fi
+    
+    # Get casks
+    local casks=($(parse_yaml_array "$role_file" "brew_casks"))
+    if [[ ${#casks[@]} -gt 0 ]]; then
+        echo "Homebrew Casks:"
+        for cask in "${casks[@]}"; do
+            echo "  - $cask"
+        done
+        echo ""
+    fi
+    
+    # Get npm packages
+    local npm_packages=($(parse_yaml_array "$role_file" "npm_packages"))
+    if [[ ${#npm_packages[@]} -gt 0 ]]; then
+        echo "NPM Packages:"
+        for pkg in "${npm_packages[@]}"; do
+            echo "  - $pkg"
+        done
+        echo ""
+    fi
+    
+    # Get Python packages
+    local python_packages=($(parse_yaml_array "$role_file" "python_packages"))
+    if [[ ${#python_packages[@]} -gt 0 ]]; then
+        echo "Python Packages:"
+        for pkg in "${python_packages[@]}"; do
+            echo "  - $pkg"
+        done
+    fi
+}
+
+# Export packages for a role
+export_role_packages() {
+    local role="${1:-}"
+    
+    if [[ -z "$role" ]]; then
+        log_error "Role name required"
+        return 1
+    fi
+    
+    local role_file="$ROLES_DIR/${role}.yaml"
+    
+    if [[ ! -f "$role_file" ]]; then
+        log_error "Role not found: $role"
+        return 1
+    fi
+    
+    echo "# Packages for role: $role"
+    echo "# Generated on $(date)"
+    echo ""
+    
+    cat "$role_file"
+}
+
+# Remove all packages for a role
+remove_role_packages() {
+    local role="${1:-}"
+    
+    if [[ -z "$role" ]]; then
+        log_error "Role name required"
+        echo "Available roles:"
+        ls -1 "$ROLES_DIR"/*.yaml 2>/dev/null | xargs -n1 basename | sed 's/.yaml//' | sed 's/^/  - /'
+        return 1
+    fi
+    
+    local role_file="$ROLES_DIR/${role}.yaml"
+    
+    if [[ ! -f "$role_file" ]]; then
+        log_error "Role not found: $role"
+        return 1
+    fi
+    
+    log_warning "This will remove all packages associated with the '$role' role."
+    echo "Packages to be removed:"
+    echo ""
+    list_role_packages "$role"
+    echo ""
+    
+    read -p "Are you sure you want to remove all these packages? (y/N) " -n 1 -r
+    echo ""
+    
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Cancelled"
+        return 0
+    fi
+    
+    # Remove formulae
+    local formulae=($(parse_yaml_array "$role_file" "brew_formulae"))
+    for formula in "${formulae[@]}"; do
+        if brew list "$formula" &> /dev/null; then
+            log_info "Removing $formula..."
+            brew uninstall "$formula" || log_warning "Failed to remove $formula"
+        fi
+    done
+    
+    # Remove casks
+    local casks=($(parse_yaml_array "$role_file" "brew_casks"))
+    for cask in "${casks[@]}"; do
+        if brew list --cask "$cask" &> /dev/null; then
+            log_info "Removing $cask..."
+            brew uninstall --cask "$cask" || log_warning "Failed to remove $cask"
+        fi
+    done
+    
+    # Remove npm packages
+    local npm_packages=($(parse_yaml_array "$role_file" "npm_packages"))
+    for pkg in "${npm_packages[@]}"; do
+        if npm list -g "$pkg" &> /dev/null; then
+            log_info "Removing npm package $pkg..."
+            npm uninstall -g "$pkg" || log_warning "Failed to remove $pkg"
+        fi
+    done
+    
+    # Remove Python packages
+    local python_packages=($(parse_yaml_array "$role_file" "python_packages"))
+    for pkg in "${python_packages[@]}"; do
+        if pipx list | grep -q "$pkg"; then
+            log_info "Removing Python package $pkg..."
+            pipx uninstall "$pkg" || log_warning "Failed to remove $pkg"
+        fi
+    done
+    
+    log_success "Role packages removed successfully"
+}
+
 # Main logic
 case "${1:-help}" in
     list)
@@ -316,8 +504,17 @@ case "${1:-help}" in
         [[ -z "${2:-}" ]] && { log_error "Package name required"; exit 1; }
         remove_pipx_package "$2"
         ;;
+    list-role)
+        list_role_packages "${2:-}"
+        ;;
+    remove-role)
+        remove_role_packages "${2:-}"
+        ;;
     export)
         export_packages
+        ;;
+    export-role)
+        export_role_packages "${2:-}"
         ;;
     help|*)
         usage

@@ -1,0 +1,161 @@
+# Game Developer
+# Tools for game development and interactive entertainment
+
+name: "Game Developer"
+description: "Game engines, graphics tools, performance profilers"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["game-development", "unity", "unreal", "godot", "graphics", "3d", "gaming"]
+icon: "🎮"
+
+brew_formulae:
+  # Core Languages
+  - name: lua
+    description: "Lightweight scripting language for games"
+  - name: mono
+    description: "Cross-platform .NET framework (Unity)"
+    optional: true
+  
+  # Build & Asset Tools
+  - name: cmake
+    description: "Cross-platform build system"
+  - name: ninja
+    description: "Fast build system"
+  - name: imagemagick
+    description: "Image manipulation tools"
+  - name: ffmpeg
+    description: "Audio/video processing"
+  
+  # Graphics Libraries
+  - name: sdl2
+    description: "Simple DirectMedia Layer"
+    optional: true
+  - name: glfw
+    description: "OpenGL/Vulkan window library"
+    optional: true
+  - name: glew
+    description: "OpenGL Extension Wrangler"
+    optional: true
+  - name: vulkan-headers
+    description: "Vulkan graphics API headers"
+    optional: true
+  
+  # Performance & Debugging
+  - name: renderdoc
+    description: "Graphics debugger"
+    optional: true
+  
+  # Version Control
+  - name: git-lfs
+    description: "Large file support for game assets"
+
+brew_casks:
+  # Game Engines
+  - name: unity-hub
+    description: "Unity game engine hub"
+    alternatives:
+      - name: godot
+        description: "Open-source game engine"
+      - name: unreal-engine
+        description: "Epic's Unreal Engine"
+    category: game_engine
+  
+  # Graphics & Modeling
+  - name: blender
+    description: "3D modeling and animation"
+    optional: true
+  - name: aseprite
+    description: "Pixel art editor"
+    optional: true
+  
+  # Audio Tools
+  - name: audacity
+    description: "Audio editor"
+    optional: true
+  - name: reaper
+    description: "Digital audio workstation"
+    optional: true
+    paid: true
+  
+  # Development Tools
+  - name: visual-studio-code
+    description: "Code editor with game dev extensions"
+    alternatives:
+      - name: jetbrains-rider
+        description: "C# IDE for Unity development"
+        paid: true
+  
+  # Version Control
+  - name: fork
+    description: "Git GUI for managing game repos"
+    alternatives:
+      - name: sourcetree
+        description: "Free Git GUI"
+  
+  # Performance Profiling
+  - name: instruments
+    description: "Apple performance analyzer"
+    apple_only: true
+  
+  # Collaboration
+  - name: discord
+    description: "Game dev community communication"
+    optional: true
+  - name: slack
+    description: "Team communication"
+    optional: true
+
+npm_packages:
+  - name: phaser
+    description: "HTML5 game framework"
+    optional: true
+
+python_packages:
+  - name: pygame
+    description: "Python game development"
+    optional: true
+  - name: panda3d
+    description: "3D game engine for Python"
+    optional: true
+
+role_indicators:
+  - unity-hub
+  - godot
+  - unreal-engine
+  - blender
+  - aseprite
+  - sdl2
+  - pygame
+
+post_install_notes:
+  - "For Unity development, open Unity Hub and install your preferred Unity version"
+  - "For Unreal Engine, you'll need to link your Epic Games account"
+  - "Consider installing platform-specific SDKs (iOS, Android) for mobile game development"
+  - "Join game dev communities on Discord for support and networking"
+
+common_workflows:
+  new_unity_project: |
+    # Create new Unity project
+    # 1. Open Unity Hub
+    # 2. Click 'New Project'
+    # 3. Choose template (3D, 2D, VR, etc.)
+    # 4. Set project name and location
+    
+  new_godot_project: |
+    # Create new Godot project
+    mkdir my-game && cd my-game
+    # Open Godot and import the folder
+    
+  setup_git_lfs: |
+    # Initialize Git LFS for large assets
+    git lfs install
+    git lfs track "*.psd"
+    git lfs track "*.png"
+    git lfs track "*.jpg"
+    git lfs track "*.fbx"
+    git lfs track "*.wav"
+    git lfs track "*.mp3"
+    git add .gitattributes
+    git commit -m "Configure Git LFS"

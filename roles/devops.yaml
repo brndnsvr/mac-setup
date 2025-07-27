@@ -1,6 +1,17 @@
 # DevOps Engineer Role
 name: "DevOps Engineer"
 description: "Infrastructure automation, CI/CD, containers, and cloud platforms"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags:
+  - infrastructure
+  - cloud
+  - automation
+  - containers
+  - kubernetes
+icon: "🔧"
 
 brew_formulae:
   # Container & Orchestration
@@ -139,3 +150,73 @@ aliases:
   - "alias kctx='kubectx'"
   - "alias kns='kubens'"
   - "alias dcp='docker-compose'"
+
+# Role metadata
+role_indicators:
+  - kubernetes-cli
+  - helm
+  - terraform
+  - ansible
+  - docker-compose
+  - k9s
+
+dependencies:
+  system:
+    - docker  # Container runtime
+  roles:
+    - core   # Base development tools
+
+post_install_notes:
+  - "Install Docker Desktop or OrbStack for container runtime"
+  - "Authenticate with cloud providers (AWS/GCP/Azure)"
+  - "Configure kubectl contexts for your clusters"
+  - "Set up Terraform cloud workspace if using Terraform Cloud"
+  - "Configure container registries access"
+
+common_workflows:
+  k8s_setup: |
+    # Set up Kubernetes access
+    # AWS EKS
+    aws eks update-kubeconfig --name my-cluster
+    
+    # GKE
+    gcloud container clusters get-credentials my-cluster
+    
+    # Azure AKS
+    az aks get-credentials --resource-group myRG --name myCluster
+    
+  terraform_init: |
+    # Initialize Terraform project
+    terraform init
+    terraform workspace new dev
+    terraform plan -out=tfplan
+    terraform apply tfplan
+    
+  docker_compose: |
+    # Run multi-container app
+    docker-compose up -d
+    docker-compose logs -f
+    docker-compose down
+    
+  ansible_playbook: |
+    # Run Ansible playbook
+    ansible-playbook -i inventory.yml playbook.yml --check
+    ansible-playbook -i inventory.yml playbook.yml
+
+health_checks:
+  - command: kubectl version --client
+    expected: "Client Version"
+  - command: terraform version
+    expected: "Terraform"
+  - command: helm version
+    expected: "version.BuildInfo"
+  - command: docker --version
+    expected: "Docker version"
+
+estimated_install_time: "20-30 minutes"
+disk_space_required: "2 GB"
+
+related_roles:
+  - backend
+  - security-engineer
+  - network-sysadmin

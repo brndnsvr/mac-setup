@@ -1,0 +1,250 @@
+# QA Engineer
+# Tools for testing, quality assurance, and test automation
+
+name: "QA Engineer"
+description: "Testing frameworks, automation tools, API testing, performance testing"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["qa", "testing", "automation", "selenium", "cypress", "playwright", "performance"]
+icon: "🧪"
+
+brew_formulae:
+  # Core Languages
+  - name: node
+    description: "JavaScript runtime for test frameworks"
+  - name: python@3.13
+    description: "Python for test automation"
+  - name: java
+    description: "For Selenium and JVM-based tools"
+    optional: true
+  
+  # API Testing
+  - name: httpie
+    description: "User-friendly HTTP client"
+  - name: curl
+    description: "Command-line HTTP tool"
+  - name: grpcurl
+    description: "gRPC testing tool"
+    optional: true
+  
+  # Performance Testing
+  - name: apache-bench
+    description: "Apache HTTP benchmarking"
+    optional: true
+  - name: wrk
+    description: "Modern HTTP benchmarking"
+  - name: vegeta
+    description: "HTTP load testing"
+    optional: true
+  - name: k6
+    description: "Modern load testing tool"
+  
+  # Browser Automation
+  - name: selenium-server
+    description: "Web browser automation"
+  - name: chromedriver
+    description: "Chrome WebDriver"
+  - name: geckodriver
+    description: "Firefox WebDriver"
+    optional: true
+  
+  # Mobile Testing
+  - name: appium
+    description: "Mobile app automation"
+    optional: true
+  - name: idb-companion
+    description: "iOS debugging bridge"
+    optional: true
+  
+  # Monitoring
+  - name: ngrok
+    description: "Secure tunnels for testing"
+    optional: true
+
+brew_casks:
+  # API Testing
+  - name: postman
+    description: "API testing platform"
+    alternatives:
+      - name: insomnia
+        description: "REST/GraphQL testing"
+      - name: bruno
+        description: "Open-source API client"
+  
+  # Test Management
+  - name: testrail
+    description: "Test case management"
+    optional: true
+    paid: true
+  
+  # Screen Recording
+  - name: kap
+    description: "Screen recorder for bug reports"
+    alternatives:
+      - name: cleanshot
+        description: "Advanced screenshot tool"
+        paid: true
+  
+  # Browsers for Testing
+  - name: google-chrome
+    description: "Chrome browser"
+  - name: firefox
+    description: "Firefox browser"
+  - name: microsoft-edge
+    description: "Edge browser"
+    optional: true
+  - name: brave-browser
+    description: "Privacy-focused browser"
+    optional: true
+  
+  # Development Tools
+  - name: visual-studio-code
+    description: "Code editor for test scripts"
+  - name: charles
+    description: "HTTP proxy for debugging"
+    optional: true
+    paid: true
+  - name: proxyman
+    description: "Modern HTTP debugging proxy"
+    optional: true
+  
+  # Database Clients
+  - name: tableplus
+    description: "Database GUI for test data"
+    alternatives:
+      - name: dbeaver-community
+        description: "Free database tool"
+  
+  # Virtualization
+  - name: browserstack
+    description: "Cross-browser testing"
+    optional: true
+    paid: true
+
+npm_packages:
+  # Test Frameworks
+  - name: jest
+    description: "JavaScript testing framework"
+  - name: mocha
+    description: "Test framework"
+    optional: true
+  - name: cypress
+    description: "E2E testing framework"
+  - name: playwright
+    description: "Cross-browser automation"
+    alternatives:
+      - name: puppeteer
+        description: "Chrome automation"
+  
+  # Utilities
+  - name: newman
+    description: "Postman CLI runner"
+  - name: lighthouse
+    description: "Performance testing"
+  - name: pa11y
+    description: "Accessibility testing"
+    optional: true
+  
+  # Mobile Testing
+  - name: detox
+    description: "React Native testing"
+    optional: true
+
+python_packages:
+  # Test Frameworks
+  - name: pytest
+    description: "Python testing framework"
+  - name: selenium
+    description: "Web browser automation"
+  - name: requests
+    description: "HTTP library for API testing"
+  - name: locust
+    description: "Load testing framework"
+  - name: behave
+    description: "BDD testing framework"
+    optional: true
+  
+  # Test Tools
+  - name: faker
+    description: "Test data generation"
+  - name: allure-pytest
+    description: "Test reporting"
+    optional: true
+  - name: pytest-html
+    description: "HTML test reports"
+  - name: pytest-xdist
+    description: "Parallel test execution"
+  
+  # Mobile Testing
+  - name: appium-python-client
+    description: "Appium Python client"
+    optional: true
+
+role_indicators:
+  - postman
+  - cypress
+  - selenium-server
+  - jest
+  - pytest
+  - k6
+  - appium
+  - charles
+
+post_install_notes:
+  - "Configure browser drivers for Selenium testing"
+  - "Set up test environments and API endpoints"
+  - "Install browser extensions for testing (React DevTools, Redux DevTools)"
+  - "Configure CI/CD integration for automated testing"
+  - "Set up test data management strategy"
+
+common_workflows:
+  new_cypress_project: |
+    # Create Cypress test project
+    mkdir e2e-tests && cd e2e-tests
+    npm init -y
+    npm install --save-dev cypress
+    npx cypress open
+    
+  new_pytest_project: |
+    # Create pytest project
+    mkdir api-tests && cd api-tests
+    python -m venv venv
+    source venv/bin/activate
+    pip install pytest requests faker
+    
+    # Create test file
+    cat > test_api.py << EOF
+    import pytest
+    import requests
+    
+    def test_api_endpoint():
+        response = requests.get('https://api.example.com/health')
+        assert response.status_code == 200
+    EOF
+    
+  load_test_k6: |
+    # Run k6 load test
+    cat > load-test.js << EOF
+    import http from 'k6/http';
+    import { check } from 'k6';
+    
+    export let options = {
+      vus: 10,
+      duration: '30s',
+    };
+    
+    export default function() {
+      let res = http.get('https://test.k6.io');
+      check(res, { 'status was 200': (r) => r.status == 200 });
+    }
+    EOF
+    
+    k6 run load-test.js
+    
+  accessibility_test: |
+    # Run accessibility tests
+    pa11y https://example.com
+    # Or with Lighthouse
+    lighthouse https://example.com --view

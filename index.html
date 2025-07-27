@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mac Development Setup - Role Selector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #007aff;
+            --secondary: #5856d6;
+            --success: #34c759;
+            --warning: #ff9500;
+            --danger: #ff3b30;
+            --dark: #1c1c1e;
+            --light: #f2f2f7;
+            --card-bg: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #6c757d;
+            --border: #e5e5ea;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --card-bg: #2c2c2e;
+                --text-primary: #ffffff;
+                --text-secondary: #98989f;
+                --light: #1c1c1e;
+                --border: #38383a;
+            }
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--light);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0 30px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .content {
+            display: none;
+        }
+        
+        .content.active {
+            display: block;
+        }
+        
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .role-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .role-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .role-card.selected {
+            border-color: var(--primary);
+            background: rgba(0, 122, 255, 0.05);
+        }
+        
+        .role-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .role-title {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        
+        .role-description {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        
+        .role-tools {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+        
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .preset-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .preset-card:hover {
+            border-color: var(--secondary);
+        }
+        
+        .preset-card.selected {
+            border-color: var(--secondary);
+            background: rgba(88, 86, 214, 0.05);
+        }
+        
+        .options {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .option-group {
+            margin-bottom: 25px;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .radio-group, .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .radio-item, .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        input[type="radio"], input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .command-output {
+            background: var(--dark);
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .copy-button:hover {
+            background: #0056b3;
+        }
+        
+        .generate-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            margin: 40px auto;
+            transition: all 0.3s;
+        }
+        
+        .generate-button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        
+        .wizard-step {
+            display: none;
+        }
+        
+        .wizard-step.active {
+            display: block;
+        }
+        
+        .wizard-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        .wizard-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        
+        .wizard-button:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        @media (max-width: 768px) {
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mac Development Setup</h1>
+            <p class="subtitle">Configure your perfect development environment</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('roles')">By Role</button>
+            <button class="tab" onclick="switchTab('presets')">Presets</button>
+            <button class="tab" onclick="switchTab('wizard')">Wizard</button>
+            <button class="tab" onclick="switchTab('custom')">Custom</button>
+        </div>
+        
+        <!-- Roles Tab -->
+        <div id="roles-content" class="content active">
+            <h2>Select Your Developer Role(s)</h2>
+            <p style="margin-bottom: 30px; color: var(--text-secondary);">Choose one or more roles that best describe your work</p>
+            
+            <div class="role-grid">
+                <div class="role-card" data-role="backend">
+                    <div class="role-icon">⚙️</div>
+                    <h3 class="role-title">Backend Developer</h3>
+                    <p class="role-description">APIs, microservices, databases</p>
+                    <p class="role-tools">Python, Go, PostgreSQL, Redis, Docker</p>
+                </div>
+                
+                <div class="role-card" data-role="frontend">
+                    <div class="role-icon">🎨</div>
+                    <h3 class="role-title">Frontend Developer</h3>
+                    <p class="role-description">Web UIs, JavaScript frameworks</p>
+                    <p class="role-tools">Node.js, TypeScript, React, Vue, Webpack</p>
+                </div>
+                
+                <div class="role-card" data-role="fullstack">
+                    <div class="role-icon">🚀</div>
+                    <h3 class="role-title">Full-Stack Developer</h3>
+                    <p class="role-description">End-to-end web development</p>
+                    <p class="role-tools">All backend + frontend tools</p>
+                </div>
+                
+                <div class="role-card" data-role="devops">
+                    <div class="role-icon">🔧</div>
+                    <h3 class="role-title">DevOps Engineer</h3>
+                    <p class="role-description">Infrastructure, CI/CD, cloud</p>
+                    <p class="role-tools">Kubernetes, Terraform, AWS CLI, Docker</p>
+                </div>
+                
+                <div class="role-card" data-role="ai-ml-engineer">
+                    <div class="role-icon">🤖</div>
+                    <h3 class="role-title">AI/ML Engineer</h3>
+                    <p class="role-description">Machine learning, LLMs</p>
+                    <p class="role-tools">Python, Jupyter, Ollama, TensorFlow</p>
+                </div>
+                
+                <div class="role-card" data-role="data-engineer">
+                    <div class="role-icon">📊</div>
+                    <h3 class="role-title">Data Engineer</h3>
+                    <p class="role-description">ETL, data pipelines</p>
+                    <p class="role-tools">Python, SQL, Airflow, dbt, Spark</p>
+                </div>
+                
+                <div class="role-card" data-role="security-engineer">
+                    <div class="role-icon">🔐</div>
+                    <h3 class="role-title">Security Engineer</h3>
+                    <p class="role-description">Security testing, vulnerability assessment</p>
+                    <p class="role-tools">Nmap, Wireshark, Burp Suite, Metasploit</p>
+                </div>
+                
+                <div class="role-card" data-role="mobile-developer">
+                    <div class="role-icon">📱</div>
+                    <h3 class="role-title">Mobile Developer</h3>
+                    <p class="role-description">iOS, Android, cross-platform</p>
+                    <p class="role-tools">Xcode, Android Studio, React Native</p>
+                </div>
+                
+                <div class="role-card" data-role="network-sysadmin">
+                    <div class="role-icon">🌐</div>
+                    <h3 class="role-title">Network/System Admin</h3>
+                    <p class="role-description">Network management, system administration</p>
+                    <p class="role-tools">Network tools, monitoring, automation</p>
+                </div>
+                
+                <div class="role-card" data-role="game-developer">
+                    <div class="role-icon">🎮</div>
+                    <h3 class="role-title">Game Developer</h3>
+                    <p class="role-description">Game engines, graphics</p>
+                    <p class="role-tools">Unity, Unreal, Blender, C++</p>
+                </div>
+                
+                <div class="role-card" data-role="blockchain-developer">
+                    <div class="role-icon">⛓️</div>
+                    <h3 class="role-title">Blockchain Developer</h3>
+                    <p class="role-description">Web3, smart contracts</p>
+                    <p class="role-tools">Solidity, Web3.js, Truffle, Ethereum</p>
+                </div>
+                
+                <div class="role-card" data-role="qa-engineer">
+                    <div class="role-icon">🧪</div>
+                    <h3 class="role-title">QA Engineer</h3>
+                    <p class="role-description">Testing, automation</p>
+                    <p class="role-tools">Selenium, Cypress, Jest, Postman</p>
+                </div>
+            </div>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label class="option-label">Installation Mode</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="mode-standard" name="mode" value="standard" checked>
+                            <label for="mode-standard">Standard (Recommended)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="mode-minimal" name="mode" value="minimal">
+                            <label for="mode-minimal">Minimal (Essentials only)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="mode-full" name="mode" value="full">
+                            <label for="mode-full">Full (Everything)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="option-group">
+                    <label class="option-label">Additional Options</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="non-interactive" name="options" value="non-interactive">
+                            <label for="non-interactive">Non-interactive mode</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="dry-run" name="options" value="dry-run">
+                            <label for="dry-run">Dry run (preview only)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="generate-button" onclick="generateCommand('roles')">Generate Setup Command</button>
+        </div>
+        
+        <!-- Presets Tab -->
+        <div id="presets-content" class="content">
+            <h2>Quick Setup Presets</h2>
+            <p style="margin-bottom: 30px; color: var(--text-secondary);">Pre-configured role combinations for common use cases</p>
+            
+            <div class="preset-grid">
+                <div class="preset-card" data-preset="startup">
+                    <h3>🚀 Startup Developer</h3>
+                    <p>Full-stack + basic DevOps</p>
+                    <small>Perfect for building MVPs quickly</small>
+                </div>
+                
+                <div class="preset-card" data-preset="enterprise">
+                    <h3>🏢 Enterprise Developer</h3>
+                    <p>Backend + security focus</p>
+                    <small>For large-scale applications</small>
+                </div>
+                
+                <div class="preset-card" data-preset="modern-web">
+                    <h3>🌐 Modern Web Developer</h3>
+                    <p>Frontend + AI integration</p>
+                    <small>Cutting-edge web applications</small>
+                </div>
+                
+                <div class="preset-card" data-preset="platform">
+                    <h3>🏗️ Platform Engineer</h3>
+                    <p>DevOps + security + networking</p>
+                    <small>Infrastructure and platform management</small>
+                </div>
+                
+                <div class="preset-card" data-preset="data-scientist">
+                    <h3>📊 Data Scientist</h3>
+                    <p>Data engineering + ML/AI</p>
+                    <small>Analytics and machine learning</small>
+                </div>
+                
+                <div class="preset-card" data-preset="mobile-fullstack">
+                    <h3>📱 Mobile Full-Stack</h3>
+                    <p>Mobile + backend services</p>
+                    <small>Complete mobile app development</small>
+                </div>
+                
+                <div class="preset-card" data-preset="devops-sre">
+                    <h3>🔧 DevOps/SRE</h3>
+                    <p>Full DevOps stack</p>
+                    <small>Site reliability engineering</small>
+                </div>
+                
+                <div class="preset-card" data-preset="indie-hacker">
+                    <h3>🎯 Indie Hacker</h3>
+                    <p>Solo developer setup</p>
+                    <small>Everything you need to ship fast</small>
+                </div>
+                
+                <div class="preset-card" data-preset="student">
+                    <h3>🎓 CS Student</h3>
+                    <p>Learning-focused setup</p>
+                    <small>Multiple languages, minimal tools</small>
+                </div>
+            </div>
+            
+            <button class="generate-button" onclick="generateCommand('presets')">Generate Setup Command</button>
+        </div>
+        
+        <!-- Wizard Tab -->
+        <div id="wizard-content" class="content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 20%"></div>
+            </div>
+            
+            <div class="wizard-step active" id="step-1">
+                <h2>What's your experience level?</h2>
+                <div class="preset-grid">
+                    <div class="preset-card" data-experience="beginner">
+                        <h3>🌱 Beginner</h3>
+                        <p>New to development</p>
+                    </div>
+                    <div class="preset-card" data-experience="intermediate">
+                        <h3>🌿 Intermediate</h3>
+                        <p>Some experience</p>
+                    </div>
+                    <div class="preset-card" data-experience="advanced">
+                        <h3>🌳 Advanced</h3>
+                        <p>Experienced developer</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="wizard-step" id="step-2">
+                <h2>What type of development do you do?</h2>
+                <div class="preset-grid">
+                    <div class="preset-card" data-type="web">
+                        <h3>🌐 Web Development</h3>
+                    </div>
+                    <div class="preset-card" data-type="mobile">
+                        <h3>📱 Mobile Development</h3>
+                    </div>
+                    <div class="preset-card" data-type="backend">
+                        <h3>⚙️ Backend Services</h3>
+                    </div>
+                    <div class="preset-card" data-type="data">
+                        <h3>📊 Data/Analytics</h3>
+                    </div>
+                    <div class="preset-card" data-type="infrastructure">
+                        <h3>🏗️ Infrastructure</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="wizard-step" id="step-3">
+                <h2>Your recommended setup</h2>
+                <div id="wizard-result"></div>
+                <button class="generate-button" onclick="generateWizardCommand()">Generate Setup Command</button>
+            </div>
+            
+            <div class="wizard-navigation">
+                <button class="wizard-button" id="prev-button" onclick="previousStep()" disabled>Previous</button>
+                <button class="wizard-button" id="next-button" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+        
+        <!-- Custom Tab -->
+        <div id="custom-content" class="content">
+            <h2>Custom Configuration</h2>
+            <p style="margin-bottom: 30px; color: var(--text-secondary);">Build your own setup command</p>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label class="option-label">Enter your command manually:</label>
+                    <textarea id="custom-command" rows="4" style="width: 100%; padding: 10px; font-family: monospace;">./setup.sh</textarea>
+                </div>
+                
+                <div class="option-group">
+                    <label class="option-label">Or paste an exported configuration:</label>
+                    <textarea id="custom-config" rows="10" style="width: 100%; padding: 10px; font-family: monospace;" placeholder="Paste your exported configuration JSON here..."></textarea>
+                </div>
+            </div>
+            
+            <button class="generate-button" onclick="processCustomCommand()">Process Command</button>
+        </div>
+        
+        <!-- Command Output -->
+        <div id="command-output" style="display: none;">
+            <h2>Your Setup Command</h2>
+            <div class="command-output">
+                <button class="copy-button" onclick="copyCommand()">Copy</button>
+                <code id="generated-command"></code>
+            </div>
+            
+            <h3>Next Steps:</h3>
+            <ol style="margin-left: 20px; color: var(--text-secondary);">
+                <li>Clone the repository: <code>git clone &lt;repository-url&gt; mac-setup</code></li>
+                <li>Navigate to directory: <code>cd mac-setup</code></li>
+                <li>Make scripts executable: <code>chmod +x *.sh</code></li>
+                <li>Run your command (copied above)</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-content').classList.add('active');
+            
+            // Hide command output when switching tabs
+            document.getElementById('command-output').style.display = 'none';
+        }
+        
+        // Role selection
+        document.querySelectorAll('.role-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+        
+        // Preset selection
+        document.querySelectorAll('.preset-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Only one preset at a time
+                document.querySelectorAll('.preset-card').forEach(p => p.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // Generate command for roles
+        function generateCommand(type) {
+            let command = './setup.sh';
+            
+            if (type === 'roles') {
+                const selectedRoles = Array.from(document.querySelectorAll('.role-card.selected'))
+                    .map(card => card.dataset.role);
+                
+                if (selectedRoles.length === 0) {
+                    alert('Please select at least one role');
+                    return;
+                }
+                
+                command += ' --roles ' + selectedRoles.join(',');
+                
+                // Add mode
+                const mode = document.querySelector('input[name="mode"]:checked').value;
+                if (mode === 'minimal') command += ' --minimal';
+                if (mode === 'full') command += ' --full';
+                
+                // Add options
+                if (document.getElementById('non-interactive').checked) {
+                    command += ' --non-interactive';
+                }
+                if (document.getElementById('dry-run').checked) {
+                    command += ' --dry-run';
+                }
+            } else if (type === 'presets') {
+                const selectedPreset = document.querySelector('.preset-card.selected');
+                if (!selectedPreset) {
+                    alert('Please select a preset');
+                    return;
+                }
+                
+                command += ' --preset ' + selectedPreset.dataset.preset;
+            }
+            
+            showCommand(command);
+        }
+        
+        // Wizard functionality
+        let currentStep = 1;
+        const totalSteps = 3;
+        let wizardData = {};
+        
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+        
+        function nextStep() {
+            // Collect data from current step
+            if (currentStep === 1) {
+                const selected = document.querySelector('#step-1 .preset-card.selected');
+                if (!selected) {
+                    alert('Please make a selection');
+                    return;
+                }
+                wizardData.experience = selected.dataset.experience;
+            } else if (currentStep === 2) {
+                const selected = document.querySelector('#step-2 .preset-card.selected');
+                if (!selected) {
+                    alert('Please make a selection');
+                    return;
+                }
+                wizardData.type = selected.dataset.type;
+                
+                // Show recommendation
+                showWizardRecommendation();
+            }
+            
+            if (currentStep < totalSteps) {
+                document.getElementById('step-' + currentStep).classList.remove('active');
+                currentStep++;
+                document.getElementById('step-' + currentStep).classList.add('active');
+                updateProgress();
+                
+                document.getElementById('prev-button').disabled = false;
+                if (currentStep === totalSteps) {
+                    document.getElementById('next-button').style.display = 'none';
+                }
+            }
+        }
+        
+        function previousStep() {
+            if (currentStep > 1) {
+                document.getElementById('step-' + currentStep).classList.remove('active');
+                currentStep--;
+                document.getElementById('step-' + currentStep).classList.add('active');
+                updateProgress();
+                
+                if (currentStep === 1) {
+                    document.getElementById('prev-button').disabled = true;
+                }
+                document.getElementById('next-button').style.display = 'block';
+            }
+        }
+        
+        function showWizardRecommendation() {
+            const recommendations = {
+                'beginner-web': { preset: 'student', description: 'Learning-focused setup with web development tools' },
+                'intermediate-web': { preset: 'startup', description: 'Full-stack development for building web apps' },
+                'advanced-web': { preset: 'modern-web', description: 'Advanced web development with latest tools' },
+                'beginner-mobile': { preset: 'mobile-developer', description: 'Mobile development essentials' },
+                'intermediate-mobile': { preset: 'mobile-fullstack', description: 'Mobile with backend capabilities' },
+                'advanced-mobile': { preset: 'mobile-fullstack', mode: 'full', description: 'Complete mobile development setup' },
+                'beginner-backend': { preset: 'backend', description: 'Backend development fundamentals' },
+                'intermediate-backend': { preset: 'backend', mode: 'full', description: 'Complete backend development' },
+                'advanced-backend': { preset: 'enterprise', description: 'Enterprise backend with security' },
+                'beginner-data': { preset: 'data-engineer', mode: 'minimal', description: 'Data engineering basics' },
+                'intermediate-data': { preset: 'data-scientist', description: 'Data science and analytics' },
+                'advanced-data': { preset: 'ml-engineer', description: 'Advanced ML engineering' },
+                'beginner-infrastructure': { preset: 'devops', mode: 'minimal', description: 'DevOps fundamentals' },
+                'intermediate-infrastructure': { preset: 'platform', description: 'Platform engineering' },
+                'advanced-infrastructure': { preset: 'cloud-architect', description: 'Cloud architecture and DevOps' }
+            };
+            
+            const key = wizardData.experience + '-' + wizardData.type;
+            const recommendation = recommendations[key] || { preset: 'startup', description: 'General development setup' };
+            
+            wizardData.recommendation = recommendation;
+            
+            const resultDiv = document.getElementById('wizard-result');
+            resultDiv.innerHTML = `
+                <div class="options">
+                    <h3>Recommended Setup: ${recommendation.preset}</h3>
+                    <p>${recommendation.description}</p>
+                    ${recommendation.mode ? `<p>Mode: ${recommendation.mode}</p>` : ''}
+                </div>
+            `;
+        }
+        
+        function generateWizardCommand() {
+            const rec = wizardData.recommendation;
+            let command = './setup.sh --preset ' + rec.preset;
+            if (rec.mode) {
+                command += ' --' + rec.mode;
+            }
+            showCommand(command);
+        }
+        
+        // Show generated command
+        function showCommand(command) {
+            document.getElementById('generated-command').textContent = command;
+            document.getElementById('command-output').style.display = 'block';
+            document.getElementById('command-output').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Copy command to clipboard
+        function copyCommand() {
+            const command = document.getElementById('generated-command').textContent;
+            navigator.clipboard.writeText(command).then(() => {
+                const button = event.target;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+        
+        // Process custom command
+        function processCustomCommand() {
+            const customCommand = document.getElementById('custom-command').value.trim();
+            const customConfig = document.getElementById('custom-config').value.trim();
+            
+            if (customConfig) {
+                try {
+                    const config = JSON.parse(customConfig);
+                    // Process imported configuration
+                    let command = './setup.sh';
+                    if (config.preset) {
+                        command += ' --preset ' + config.preset;
+                    } else if (config.roles && config.roles.length > 0) {
+                        command += ' --roles ' + config.roles.join(',');
+                    }
+                    if (config.install_mode === 'minimal') command += ' --minimal';
+                    if (config.install_mode === 'full') command += ' --full';
+                    showCommand(command);
+                } catch (e) {
+                    alert('Invalid configuration JSON');
+                }
+            } else if (customCommand) {
+                showCommand(customCommand);
+            } else {
+                alert('Please enter a command or paste a configuration');
+            }
+        }
+        
+        // Initialize wizard step selection
+        document.querySelectorAll('#step-1 .preset-card, #step-2 .preset-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.preset-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>

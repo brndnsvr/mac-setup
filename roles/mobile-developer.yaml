@@ -1,6 +1,12 @@
 # Mobile Developer Role
 name: "Mobile Developer"
 description: "iOS, Android, and cross-platform mobile app development"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["mobile", "ios", "android", "react-native", "flutter", "swift", "kotlin"]
+icon: "📱"
 
 brew_formulae:
   # iOS Development
@@ -127,3 +133,140 @@ aliases:
   - "alias rna='react-native run-android'"
   - "alias xc='open -a Xcode'"
   - "alias sim='open -a Simulator'"
+
+role_indicators:
+  commands:
+    - xcodebuild
+    - swift
+    - pod
+    - flutter
+    - react-native
+  files:
+    - Package.swift
+    - Podfile
+    - build.gradle
+    - pubspec.yaml
+    - package.json
+  directories:
+    - ios
+    - android
+    - Pods
+    - .xcodeproj
+    - .xcworkspace
+
+dependencies:
+  system:
+    - xcode-select
+    - git
+  roles:
+    - base-developer
+
+post_install_notes: |
+  Mobile Developer Setup Complete! 📱
+  
+  Next steps:
+  1. iOS Development Setup:
+     - Open Xcode and accept license agreements
+     - Install additional components when prompted
+     - Set up Apple Developer account
+     - Configure code signing
+  
+  2. Android Development (if needed):
+     - Open Android Studio
+     - Install Android SDK components
+     - Set up Android Virtual Devices (AVDs)
+     - Configure ANDROID_HOME in ~/.zshrc
+  
+  3. Cross-Platform Setup (choose one):
+     - React Native: npx react-native doctor
+     - Flutter: flutter doctor
+     - Expo: expo doctor
+  
+  4. Device Setup:
+     - Enable Developer Mode on iOS devices
+     - Enable USB Debugging on Android devices
+  
+  5. Test your setup:
+     - iOS: xcodebuild -version
+     - Android: adb devices
+     - React Native: npx react-native init TestApp
+
+common_workflows:
+  create_ios_app: |
+    # SwiftUI app
+    mkdir MyApp && cd MyApp
+    swift package init --type executable
+    # Or use Xcode: File > New > Project
+  
+  create_react_native: |
+    # React Native with TypeScript
+    npx react-native init MyApp --template react-native-template-typescript
+    cd MyApp
+    
+    # iOS
+    cd ios && pod install && cd ..
+    npx react-native run-ios
+    
+    # Android
+    npx react-native run-android
+  
+  create_flutter_app: |
+    flutter create my_app
+    cd my_app
+    flutter pub get
+    
+    # Run on iOS
+    flutter run -d ios
+    
+    # Run on Android
+    flutter run -d android
+  
+  setup_expo: |
+    # Expo managed workflow
+    npx create-expo-app MyApp
+    cd MyApp
+    npx expo start
+    
+    # Build for production
+    eas build --platform ios
+    eas build --platform android
+  
+  ios_testing: |
+    # Unit tests
+    xcodebuild test -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15'
+    
+    # UI tests with Maestro
+    maestro test flow.yaml
+  
+  android_debugging: |
+    # List devices
+    adb devices
+    
+    # Install APK
+    adb install app-debug.apk
+    
+    # View logs
+    adb logcat | grep MyApp
+
+health_checks:
+  commands:
+    - xcodebuild -version
+    - swift --version
+    - pod --version
+  optional_commands:
+    - flutter --version
+    - react-native --version
+    - adb version
+  simulators:
+    - "xcrun simctl list devices | grep -q 'iPhone' && echo 'iOS Simulators OK'"
+    - "which emulator && emulator -list-avds || echo 'Android emulator not set up'"
+  environment:
+    - "echo $ANDROID_HOME"
+    - "which java"
+
+estimated_install_time: "30-45 minutes"
+disk_space_required: "15GB+"
+related_roles:
+  - frontend
+  - fullstack
+  - ui-ux-designer

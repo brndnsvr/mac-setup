@@ -1,6 +1,12 @@
 # Frontend Developer Role
 name: "Frontend Developer"
 description: "Web applications, UI/UX, and client-side development"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["frontend", "javascript", "typescript", "react", "vue", "css", "ui-ux"]
+icon: "🎨"
 
 brew_formulae:
   # Core Runtime
@@ -185,3 +191,116 @@ aliases:
   - "alias nt='npm test'"
   - "alias ni='npm install'"
   - "alias dev='npm run dev'"
+
+role_indicators:
+  commands:
+    - node
+    - npm
+    - pnpm
+    - yarn
+  files:
+    - package.json
+    - tsconfig.json
+    - webpack.config.js
+    - vite.config.js
+    - .eslintrc.js
+  directories:
+    - node_modules
+    - src
+    - public
+    - components
+    - styles
+
+dependencies:
+  system:
+    - xcode-select
+    - git
+  roles:
+    - base-developer
+
+post_install_notes: |
+  Frontend Developer Setup Complete! 🎨
+  
+  Next steps:
+  1. Choose your framework and create a project:
+     - React: npx create-react-app my-app --template typescript
+     - Vue: npm create vue@latest
+     - Angular: ng new my-app
+     - Svelte: npm create svelte@latest my-app
+     - Next.js: npx create-next-app@latest
+  
+  2. Set up your design workflow:
+     - Open Figma for UI design
+     - Configure VS Code with extensions:
+       • ESLint, Prettier, Tailwind CSS IntelliSense
+       • Auto Rename Tag, Color Highlight
+  
+  3. Configure local HTTPS for development:
+     - mkcert -install
+     - mkcert localhost
+  
+  4. Set up CSS framework (if desired):
+     - Tailwind: npm install -D tailwindcss
+     - Bootstrap: npm install bootstrap
+  
+  5. Configure testing:
+     - Jest: already installed globally
+     - Cypress: npx cypress open
+     - Playwright: npx playwright test
+
+common_workflows:
+  create_vite_project: |
+    npm create vite@latest my-app
+    cd my-app
+    npm install
+    npm run dev
+  
+  create_next_app: |
+    npx create-next-app@latest my-app \
+      --typescript \
+      --tailwind \
+      --app \
+      --src-dir
+    cd my-app
+    npm run dev
+  
+  setup_tailwind: |
+    npm install -D tailwindcss postcss autoprefixer
+    npx tailwindcss init -p
+    # Add to CSS: @tailwind base; @tailwind components; @tailwind utilities;
+  
+  component_library: |
+    # React component with Storybook
+    npx storybook@latest init
+    npm run storybook
+  
+  performance_testing: |
+    # Lighthouse CI
+    npm install -g @lhci/cli
+    lhci autorun
+  
+  responsive_testing: |
+    # Using Responsively app
+    open -a Responsively
+    # Or browser-sync
+    browser-sync start --server --files "*.html, css/*.css"
+
+health_checks:
+  commands:
+    - node --version
+    - npm --version
+    - pnpm --version || echo "pnpm not installed"
+  files:
+    - ~/.npmrc
+  dev_server:
+    - "curl -f http://localhost:3000 || echo 'No dev server running'"
+    - "curl -f http://localhost:5173 || echo 'No Vite server running'"
+  browser_tools:
+    - "which chromedriver || echo 'ChromeDriver not installed'"
+
+estimated_install_time: "15-25 minutes"
+disk_space_required: "5GB"
+related_roles:
+  - fullstack
+  - mobile-developer
+  - ui-ux-designer

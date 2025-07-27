@@ -1,6 +1,12 @@
 # Backend Developer Role
 name: "Backend Developer"
 description: "APIs, microservices, databases, and server-side development"
+version: "2.0"
+author: "Mac Setup Team"
+last_updated: "2025-01-26"
+minimum_macos: "13.0"
+tags: ["backend", "api", "microservices", "databases", "python", "go", "rust", "java"]
+icon: "⚙️"
 
 brew_formulae:
   # Primary Languages (ask preferences)
@@ -142,3 +148,123 @@ aliases:
   - "alias uvicorn='python -m uvicorn'"
   - "alias dj='python manage.py'"
   - "alias migrate='python manage.py migrate'"
+
+role_indicators:
+  commands:
+    - python
+    - go
+    - cargo
+    - java
+    - psql
+  files:
+    - requirements.txt
+    - go.mod
+    - Cargo.toml
+    - pom.xml
+    - Dockerfile
+  directories:
+    - .venv
+    - venv
+    - .pytest_cache
+    - target
+
+dependencies:
+  system:
+    - xcode-select
+    - git
+  roles:
+    - base-developer
+
+post_install_notes: |
+  Backend Developer Setup Complete! ⚙️
+  
+  Next steps:
+  1. Choose your primary language and set up environment:
+     - Python: pyenv install 3.13.0 && pyenv global 3.13.0
+     - Go: go version
+     - Rust: rustup update
+     - Java: java -version
+  
+  2. Set up database connections:
+     - PostgreSQL: psql -U postgres
+     - Redis: redis-cli ping
+     - MongoDB: mongosh
+  
+  3. Configure your API development environment:
+     - Install Postman/Insomnia for API testing
+     - Set up TablePlus for database management
+  
+  4. Container setup:
+     - docker run hello-world
+     - docker-compose version
+  
+  5. Create your first API project:
+     - Python: cookiecutter gh:tiangolo/full-stack-fastapi-template
+     - Go: go mod init myapi
+     - Rust: cargo new myapi
+
+common_workflows:
+  fastapi_project: |
+    mkdir fastapi-app && cd fastapi-app
+    python -m venv venv
+    source venv/bin/activate
+    pip install fastapi uvicorn sqlalchemy
+    # Create main.py
+    uvicorn main:app --reload
+  
+  django_rest_api: |
+    django-admin startproject myapi
+    cd myapi
+    pip install djangorestframework
+    python manage.py startapp api
+    python manage.py migrate
+    python manage.py runserver
+  
+  go_api: |
+    mkdir go-api && cd go-api
+    go mod init github.com/user/go-api
+    go get github.com/gin-gonic/gin
+    # Create main.go
+    go run main.go
+  
+  rust_api: |
+    cargo new rust-api
+    cd rust-api
+    # Add to Cargo.toml: actix-web = "4"
+    cargo run
+  
+  database_setup: |
+    # PostgreSQL with Docker
+    docker run -d \
+      --name postgres \
+      -e POSTGRES_PASSWORD=postgres \
+      -p 5432:5432 \
+      postgres:16
+    
+    # Redis
+    docker run -d \
+      --name redis \
+      -p 6379:6379 \
+      redis:alpine
+
+health_checks:
+  commands:
+    - python --version
+    - pip --version
+    - docker --version
+    - psql --version
+  optional_commands:
+    - go version
+    - cargo --version
+    - java -version
+  services:
+    - "curl -f http://localhost:8000/health || echo 'No API running'"
+    - "redis-cli ping || echo 'Redis not running'"
+    - "psql -U postgres -c 'SELECT 1' || echo 'PostgreSQL not running'"
+
+estimated_install_time: "20-30 minutes"
+disk_space_required: "6GB"
+related_roles:
+  - fullstack
+  - devops-engineer
+  - data-engineer
