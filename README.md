@@ -114,7 +114,7 @@ iOS, Android, and cross-platform development
 - **Terminal** - Warp or iTerm2
 - **Shell** - Zsh with Starship prompt
 - **Security** - GPG, SSH, age encryption
-- **Productivity** - Rectangle, Raycast, 1Password
+- **Productivity** - Rectangle, 1Password
 
 ## 📁 Repository Structure
 

@@ -82,7 +82,6 @@ PRODUCTIVITY_APPS=(
     "obsidian"                # Knowledge management
     "notion"                  # All-in-one workspace
     "linear-linear"           # Issue tracking
-    "raycast"                 # Extensible launcher
 )
 
 # Communication

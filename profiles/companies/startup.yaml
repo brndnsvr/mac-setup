@@ -17,7 +17,7 @@ tool_preferences:
   editor: "cursor"         # AI-assisted coding
   api_client: "bruno"      # Open-source API client
   database_gui: "tableplus"
-  password_manager: "bitwarden"  # Open-source option
+  password_manager: "1password"  # Password manager
 
 # Additional tools
 additional_tools:

@@ -450,7 +450,7 @@ process_roles() {
         # Handle casks with alternatives
         for cask in "${core_casks[@]}"; do
             # Skip optional casks in minimal mode
-            if [ "$MINIMAL_MODE" = true ] && [[ "$cask" =~ ^(raycast|alfred|1password|bitwarden)$ ]]; then
+            if [ "$MINIMAL_MODE" = true ] && [[ "$cask" =~ ^(alfred|1password)$ ]]; then
                 continue
             fi
             SELECTED_TOOLS+=("cask:$cask")
@@ -458,8 +458,9 @@ process_roles() {
     fi
     
     # Process selected roles
-    for role in "${SELECTED_ROLES[@]}"; do
-        local role_file="$ROLES_DIR/${role}.yaml"
+    if [ ${#SELECTED_ROLES[@]} -gt 0 ]; then
+        for role in "${SELECTED_ROLES[@]}"; do
+            local role_file="$ROLES_DIR/${role}.yaml"
         
         if [ -f "$role_file" ]; then
             log_info "Processing role: $role"
@@ -527,9 +528,12 @@ process_roles() {
             exit 1
         fi
     done
+    fi
     
     # Remove duplicates
-    SELECTED_TOOLS=($(echo "${SELECTED_TOOLS[@]}" | tr ' ' '\n' | sort -u))
+    if [ ${#SELECTED_TOOLS[@]} -gt 0 ]; then
+        SELECTED_TOOLS=($(echo "${SELECTED_TOOLS[@]}" | tr ' ' '\n' | sort -u))
+    fi
     
     benchmark_step "Processing roles" "$step_start"
 }
@@ -555,7 +559,7 @@ export_configuration() {
   },
   "configuration": {
     "preset": "${PRESET_MODE:-null}",
-    "roles": [$(printf '"%s",' "${SELECTED_ROLES[@]}" | sed 's/,$//')],
+    "roles": [$([ ${#SELECTED_ROLES[@]} -gt 0 ] && printf '"%s",' "${SELECTED_ROLES[@]}" | sed 's/,$//' || echo "")],
     "install_mode": "$([ "$MINIMAL_MODE" = true ] && echo "minimal" || ([ "$FULL_MODE" = true ] && echo "full" || echo "standard"))",
     "skip_optional": $SKIP_OPTIONAL,
     "options": {
@@ -698,7 +702,7 @@ load_profile() {
     
     # Add additional roles
     for role in "${additional_roles[@]}"; do
-        if [[ ! " ${SELECTED_ROLES[@]} " =~ " ${role} " ]]; then
+        if [ ${#SELECTED_ROLES[@]} -eq 0 ] || [[ ! " ${SELECTED_ROLES[@]} " =~ " ${role} " ]]; then
             SELECTED_ROLES+=("$role")
         fi
     done
@@ -897,7 +901,8 @@ post_installation() {
     fi
     
     # Role-specific setup
-    for role in "${SELECTED_ROLES[@]}"; do
+    if [ ${#SELECTED_ROLES[@]} -gt 0 ]; then
+        for role in "${SELECTED_ROLES[@]}"; do
         case "$role" in
             "ai-ml-engineer")
                 if command -v ollama &> /dev/null; then
@@ -918,6 +923,7 @@ post_installation() {
                 ;;
         esac
     done
+    fi
 }
 
 # Main execution

@@ -93,23 +93,12 @@ brew_casks:
     alternatives:
       - name: iterm2
         description: "Traditional powerful terminal"
-      - name: wezterm
-        description: "GPU-accelerated terminal"
-  
-  - name: raycast
-    description: "Productivity launcher"
-    alternatives:
-      - name: alfred
-        description: "Classic Mac launcher"
   
   - name: rectangle
     description: "Window management"
   
   - name: 1password
     description: "Password manager"
-    alternatives:
-      - name: bitwarden
-        description: "Open-source password manager"
 
 pipx_packages:
   - name: pre-commit

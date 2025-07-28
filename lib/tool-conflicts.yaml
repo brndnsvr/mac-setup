@@ -8,7 +8,6 @@ conflicts:
     tools:
       - warp
       - iterm2
-      - wezterm
       - kitty
     default: warp
   
@@ -84,17 +83,15 @@ conflicts:
   launchers:
     description: "Productivity launcher"
     tools:
-      - raycast
       - alfred
       - launchbar
-    default: raycast
+    default: alfred
   
   # Password managers
   password_managers:
     description: "Password manager"
     tools:
       - 1password
-      - bitwarden
       - dashlane
       - keeper
     default: 1password

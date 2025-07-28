@@ -207,7 +207,6 @@ cask "ngrok"
 # Productivity
 cask "rectangle"
 cask "alfred"
-cask "raycast"
 cask "obsidian"
 cask "notion"
 cask "linear-linear"

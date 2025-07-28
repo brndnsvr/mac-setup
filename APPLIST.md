@@ -43,7 +43,6 @@ This document lists all applications and tools organized by role. Tools marked w
 - 🔧 `tmux` - Terminal multiplexer
 - 🖥️ `warp` - AI-powered terminal 🔄
   - Alt: `iterm2` - Traditional powerful terminal
-  - Alt: `wezterm` - GPU-accelerated terminal
 
 ### Text Editors
 - 🔧 `neovim` - Modern vim
@@ -69,11 +68,8 @@ This document lists all applications and tools organized by role. Tools marked w
 - 🔧 `ncdu` - Disk usage analyzer
 
 ### Productivity
-- 🖥️ `raycast` - Productivity launcher 🔄
-  - Alt: `alfred` - Classic Mac launcher
 - 🖥️ `rectangle` - Window management
-- 🖥️ `1password` - Password manager 🔄
-  - Alt: `bitwarden` - Open-source password manager
+- 🖥️ `1password` - Password manager
 
 ---
 
