@@ -121,6 +121,12 @@ DRY_RUN=false
 FAILED_UPDATES=()
 BENCHMARK=false
 BENCHMARK_FILE="$HOME/.mac-setup-benchmark.log"
+CONFIG_ONLY=false
+USE_CONFIG=false
+
+# Source additional libraries
+source "$SCRIPT_DIR/lib/install-config.sh"
+source "$SCRIPT_DIR/lib/install-wrapper.sh"
 
 # Display welcome message
 show_welcome() {
@@ -133,6 +139,11 @@ show_welcome() {
     echo "This script will set up your Mac for development based on your role(s)."
     echo "You can select multiple roles, and common tools will only be installed once."
     echo ""
+    echo "NEW: Configuration Mode Available!"
+    echo "  • Use --config-mode to build a configuration without installing"
+    echo "  • Review and customize what gets installed"
+    echo "  • Use --use-config to install from saved configuration"
+    echo ""
 }
 
 # Show help
@@ -142,6 +153,8 @@ show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
     echo "Options:"
+    echo "  --config-mode         Build configuration only (no installation)"
+    echo "  --use-config          Use existing configuration for installation"
     echo "  --preset NAME         Use a predefined role combination"
     echo "  --roles ROLE1,ROLE2   Specify roles directly (comma-separated)"
     echo "  --minimal             Install only essential tools"
@@ -936,6 +949,15 @@ main() {
     # Check for command line arguments
     while [[ $# -gt 0 ]]; do
         case $1 in
+            --config-mode)
+                CONFIG_ONLY=true
+                shift
+                ;;
+            --use-config)
+                USE_CONFIG=true
+                AUTO_MODE=true
+                shift
+                ;;
             --roles)
                 IFS=',' read -ra SELECTED_ROLES <<< "$2"
                 AUTO_MODE=true
@@ -1012,27 +1034,71 @@ main() {
         esac
     done
     
-    # Interactive mode: show presets first, then roles if needed
-    if [ "$AUTO_MODE" = false ]; then
-        show_presets
-        if ! select_preset; then
-            # User chose to select individual roles
-            show_roles
-            select_roles
+    # Configuration mode - build config and exit
+    if [ "$CONFIG_ONLY" = true ]; then
+        log_section "Configuration Mode"
+        echo "Building installation configuration..."
+        echo
+        
+        # Initialize config
+        init_install_config
+        
+        # Interactive mode for configuration
+        if [ "$AUTO_MODE" = false ]; then
+            show_presets
+            if ! select_preset; then
+                # User chose to select individual roles
+                show_roles
+                select_roles
+            fi
         fi
+        
+        # Process roles and build configuration
+        process_roles_for_config
+        
+        # Show summary and save config
+        if show_install_summary; then
+            log_success "Configuration saved!"
+            echo "Run with --use-config to install using this configuration"
+        else
+            log_info "Configuration cancelled"
+        fi
+        exit 0
     fi
     
-    # Process selected roles
-    process_roles
-    
-    # Show summary and confirm
-    show_summary
-    
-    # Perform installation
-    perform_installation
-    
-    # Post-installation setup
-    post_installation
+    # Use existing configuration
+    if [ "$USE_CONFIG" = true ]; then
+        if [[ ! -f "$HOME/.mac-setup-install-config" ]]; then
+            log_error "No configuration found. Run with --config-mode first."
+            exit 1
+        fi
+        log_info "Using existing configuration..."
+        perform_installation
+        post_installation
+    else
+        # Traditional mode - immediate installation
+        # Interactive mode: show presets first, then roles if needed
+        if [ "$AUTO_MODE" = false ]; then
+            show_presets
+            if ! select_preset; then
+                # User chose to select individual roles
+                show_roles
+                select_roles
+            fi
+        fi
+        
+        # Process selected roles
+        process_roles
+        
+        # Show summary and confirm
+        show_summary
+        
+        # Perform installation
+        perform_installation
+        
+        # Post-installation setup
+        post_installation
+    fi
     
     log_success "Installation complete!"
     echo ""
@@ -1048,6 +1114,48 @@ main() {
     
     # Final cleanup check
     cleanup
+}
+
+# Process roles for configuration mode
+process_roles_for_config() {
+    log_section "Building configuration for selected roles"
+    
+    # Add core tools to config
+    add_core_tools_to_config
+    
+    # Process each role
+    for role in "${SELECTED_ROLES[@]}"; do
+        local role_file="$ROLES_DIR/${role}.yaml"
+        if [ ! -f "$role_file" ]; then
+            log_warning "Role file not found: $role"
+            continue
+        fi
+        
+        log_info "Adding tools for role: $role"
+        
+        # Let user choose which tools to include from this role
+        echo
+        echo "Configure tools for $role role:"
+        echo "  1) Include all tools for this role"
+        echo "  2) Customize tool selection"
+        echo
+        read -p "Your choice [1-2]: " choice
+        
+        case "$choice" in
+            1) add_all_role_tools "$role_file" ;;
+            2) customize_role_tools "$role_file" ;;
+            *) add_all_role_tools "$role_file" ;;
+        esac
+    done
+}
+
+# Add core tools to configuration
+add_core_tools_to_config() {
+    local core_file="$ROLES_DIR/core.yaml"
+    if [[ -f "$core_file" ]]; then
+        log_info "Adding core tools to configuration"
+        add_all_role_tools "$core_file"
+    fi
 }
 
 # Run main function

@@ -386,6 +386,13 @@ update() {
 }
 EOF
 
+# Setup additional Zsh productivity extras
+if [[ -f "${BASH_SOURCE[0]%/*}/zsh-extras.sh" ]]; then
+    log_info "Setting up additional Zsh productivity functions..."
+    source "${BASH_SOURCE[0]%/*}/zsh-extras.sh"
+    setup_zsh_extras
+fi
+
 # Create environment variables file
 log_info "Creating environment configuration..."
 cat > "$HOME/.zsh/env.zsh" << 'EOF'
